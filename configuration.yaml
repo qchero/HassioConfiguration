@@ -272,5 +272,3 @@ script: !include scripts.yaml
 
 # intent_script: !include intent_script.yaml // Replaced by Haaska
 # group: !include groups.yaml // Replaced by Lovelace??
-
-
