@@ -1,0 +1,34 @@
+- alias: "Input Number - Turn on fresh air fan"
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: input_number.fresh_air_minutes
+  action:
+    - service:
+        timer.cancel
+      data:
+        entity_id: timer.fresh_air_timer
+    - service:
+        timer.start
+      data_template:
+        entity_id: timer.fresh_air_timer
+        duration: 00:{{ trigger.to_state.state | int }}:00
+
+- alias: "Input Time and Minute - Schedule fresh air fan"
+  initial_state: true
+  trigger:
+    platform: template
+    value_template:
+      "
+      {% set current_time = states('sensor.time') %}
+      {% if (
+          current_time >= (states.input_datetime.fresh_air_time1.attributes.timestamp | int | timestamp_custom('%H:%M', False)) and
+          states.input_number.fresh_air_minutes1 > 0 and
+          current_time <= ((states.input_datetime.fresh_air_time1.attributes.timestamp + states.input_number.fresh_air_minutes1 * 60) | int | timestamp_custom('%H:%M', False)))
+      %}
+      true
+      {% endif %}
+      "
+  action:
+    service: switch.turn_on
+    entity_id: switch.sonoff_10004f6d35

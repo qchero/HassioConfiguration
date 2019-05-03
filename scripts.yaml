@@ -1,0 +1,57 @@
+# Sleeping / Wake up
+
+# Double turn off, since sometimes the state stays on
+turn_off_bedroom_light:
+  sequence:
+    - service_template:
+        light.turn_off
+      data_template:
+        entity_id: light.ge_14294_inwall_smart_dimmer_level
+        transition: 2
+    - delay: '00:00:10'
+    - service_template:
+        light.turn_off
+      data_template:
+        entity_id: light.ge_14294_inwall_smart_dimmer_level
+
+turn_on_bedroom_light_in_morning:
+  sequence:
+    - service_template:
+        light.turn_on
+      data_template:
+        entity_id: light.ge_14294_inwall_smart_dimmer_level
+        brightness_pct: 20
+        transition: 2
+    - delay: '00:00:10'
+    - service_template:
+        light.turn_on
+      data_template:
+        entity_id: light.ge_14294_inwall_smart_dimmer_level
+        brightness_pct: 100
+        transition: 300
+
+# Leaving home / Coming home
+
+both_leave_home:
+  sequence:
+    - service_template:
+        light.turn_off
+      data_template:
+        entity_id: light.ge_14294_inwall_smart_dimmer_level
+        transition: 2
+    - service_template:
+        lock.lock
+      data_template:
+        entity_id: lock.schlage_be469_touchscreen_deadbolt_locked
+    - service_template:
+        lock.lock
+      data_template:
+        entity_id: lock.garage_door
+
+# Unlock Garage Door
+unlock_garage_second_door:
+  sequence:
+    - service:
+        lock.unlock
+      data_template:
+        entity_id: lock.garage_door

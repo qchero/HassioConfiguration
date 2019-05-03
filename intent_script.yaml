@@ -1,0 +1,121 @@
+# SleepingLightControlByDimLevel:
+#   action:
+#     service_template: >
+#       {% if DimLevel == 0 %}
+#         light.turn_off
+#       {% else %}
+#         light.turn_on
+#       {% endif %}
+#     data_template:
+#       entity_id: light.ge_14294_inwall_smart_dimmer_level
+#       brightness_pct: '{{ DimLevel }}'
+#       transition: 2
+#   speech:
+#     type: plain
+#     text: You got it!
+
+
+# SleepingLightControlByDimType:
+#   action:
+#     service_template:
+#       light.turn_on
+#     data_template:
+#       entity_id: light.ge_14294_inwall_smart_dimmer_level
+#       brightness_pct: >
+#         {% if DimType.lower() == "dimmer" %}
+#           25
+#         {% elif DimType.lower() == "dim" %}
+#           35
+#         {% elif DimType.lower() == "bright" %}
+#           50
+#         {% elif DimType.lower() == "brighter" %}
+#           60
+#         {% elif DimType.lower() == "brightest" %}
+#           80
+#         {% endif %}
+#       transition: 2
+#   speech:
+#     type: plain
+#     text: You got it!
+
+
+# WakingUp:
+#   action:
+#     service_template:
+#       light.turn_on
+#     data_template:
+#       entity_id: light.ge_14294_inwall_smart_dimmer_level
+#       brightness_pct: 25
+#       transition: 2
+#   speech:
+#     type: plain
+#     text: Good morning masters!
+
+
+# GoingToSleep:
+#   action:
+#     service_template:
+#       light.turn_off
+#     data_template:
+#       entity_id: light.ge_14294_inwall_smart_dimmer_level
+#       transition: 2
+#   speech:
+#     type: plain
+#     text: Have a good sleep!
+
+
+# # LevaingHome:
+# #   action:
+# #     service_template:
+# #       climate.set_away_mode
+# #     data_template:
+# #       entity_id: climate.hallway
+# #       away_mode: true
+      
+# #     service_template:
+# #       light.turn_off
+# #     data_template:
+# #       entity_id: light.ge_14294_inwall_smart_dimmer_level
+# #       transition: 2
+# #   speech:
+# #     type: plain
+# #     text: Safe travel!
+
+
+# AMAZON.FallbackIntent:
+#   speech:
+#     type: plain
+#     text: I don't understand. Teach me master.
+
+
+# RunScriptIntent:
+#   action:
+#     service: script.turn_on
+#     data_template:
+#       entity_id: script.{{ Script | replace(" ", "_") }}
+#   speech:
+#     type: plain
+#     text: OK
+
+# NorthGarageDoorIntent:
+#   speech:
+#     type: plain
+#     text: >
+#       {%- if Operation.lower() == "open" and is_state("binary_sensor.garage_door_north_position_sensor", "off") -%}
+#         OK, opening the alley garage door.
+#       {%- elif Operation.lower() == "open" and is_state("binary_sensor.garage_door_north_position_sensor", "on") -%}
+#         The alley garage door is already open.
+#       {%- elif Operation.lower() == "close" and is_state("binary_sensor.garage_door_north_position_sensor", "on") -%}
+#         OK, closing the alley garage door.
+#       {%- elif Operation.lower() == "close" and is_state("binary_sensor.garage_door_north_position_sensor", "off") -%}
+#         The alley garage door is already closed.
+#       {%- endif -%}
+#   action:
+#     - service_template: >
+#         {%- if Operation.lower() == "open" and is_state("binary_sensor.garage_door_north_position_sensor", "off") -%}
+#           switch.turn_on
+#         {%- elif Operation.lower() == "close" and is_state("binary_sensor.garage_door_north_position_sensor", "on") -%}
+#           switch.turn_on
+#         {%- endif -%}
+#       data_template:
+#         entity_id: switch.garage_door_north_operator_switch

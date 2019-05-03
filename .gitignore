@@ -1,0 +1,30 @@
+# Random files
+.HA_VERSION
+.august.conf
+.uuid
+home-assistant_v2.db-shm
+home-assistant.log
+home-assistant_v2.db-wal
+
+# Extensions
+*.pickle
+*.db
+*.txt
+*.sqlite
+*.xml
+*.log
+
+# Secret files
+secrets.yaml
+
+# Cache
+*__pycache__*
+
+# .storage files
+*.storage*
+
+# python libraries ?
+deps/lib/python*
+
+# sonoff custom_components
+custom_components/sonoff/*

@@ -1,0 +1,153 @@
+# climate.hallway:
+#   friendly_name: Nest Thermostat
+#   unit_of_measurement: 'Fahrenheit'
+
+# binary_sensor.hallway_thermostat_fan:
+#   friendly_name: Nest Fan
+
+# sensor.hallway_thermostat_humidity:
+#   friendly_name: Nest
+#   icon: mdi:water-percent
+
+# Nest:
+
+sensor.hallway_thermostat_temperature:
+  friendly_name: Hallway
+
+sensor.hallway_thermostat_humidity:
+  friendly_name: Hallway
+
+
+# Xiaomi devices:
+
+# Aqara temperature sensor #1:
+
+sensor.humidity_158d00023204b3:
+  friendly_name: Patio
+
+sensor.pressure_158d00023204b3:
+  friendly_name: Patio
+
+sensor.temperature_158d00023204b3:
+  friendly_name: Patio
+
+# Aqara temperature sensor #2:
+
+sensor.humidity_158d000232166e:
+  friendly_name: Driveway
+
+sensor.pressure_158d000232166e:
+  friendly_name: Driveway
+
+sensor.temperature_158d000232166e:
+  friendly_name: Driveway
+
+# Aqara temperature sensor #3:
+sensor.humidity_158d0002725689:
+  friendly_name: Master Bath
+
+sensor.pressure_158d0002725689:
+  friendly_name: Master Bath
+
+sensor.temperature_158d0002725689:
+  friendly_name: Master Bath
+
+# Aqara temperature sensor #4:
+sensor.humidity_158d000272ce68:
+  friendly_name: Study
+
+sensor.pressure_158d000272ce68:
+  friendly_name: Study
+
+sensor.temperature_158d000272ce68:
+  friendly_name: Study
+
+# Aqara temperature sensor #5:
+sensor.humidity_158d00022fddf2:
+  friendly_name: Master Bed
+
+sensor.pressure_158d00022fddf2:
+  friendly_name: Master Bed
+
+sensor.temperature_158d00022fddf2:
+  friendly_name: Master Bed
+
+# Xiaomi temperature sensor #1:
+
+sensor.humidity_158d000208d60c:
+  friendly_name: Master Bath
+
+sensor.pressure_158d000208d60c:
+  friendly_name: Master Bath
+
+sensor.temperature_158d000208d60c:
+  friendly_name: Master Bath
+
+
+# Xiaomi temperature sensor #6
+
+sensor.humidity_158d0002b56d39:
+  friendly_name: Living
+
+sensor.pressure_158d0002b56d39:
+  friendly_name: Living
+
+sensor.temperature_158d0002b56d39:
+  friendly_name: Living
+
+# Xiaomi temperature sensor #7
+
+sensor.humidity_158d0002b5c943:
+  friendly_name: Family
+
+sensor.pressure_158d0002b5c943:
+  friendly_name: Family
+
+sensor.temperature_158d0002b5c943:
+  friendly_name: Family
+
+# Xiaomi temperature sensor #8
+
+sensor.humidity_158d000272ff7f:
+  friendly_name: Garage
+
+sensor.pressure_158d000272ff7f:
+  friendly_name: Garage
+
+sensor.temperature_158d000272ff7f:
+  friendly_name: Garage
+
+
+# Experiment
+
+sensor.humidity_158d000208d575:
+  friendly_name: XXX
+
+sensor.temperature_158d000208d575:
+  friendly_name: XXX
+
+
+binary_sensor.motion_sensor_158d0002427091:
+  friendly_name: Motion Sensor
+
+light.gateway_light_7c49eb1a5f3b:
+  friendly_name: Xiaomi Gateway Lights
+
+
+# Lock
+
+lock.schlage_be469_touchscreen_deadbolt_locked:
+  friendly_name: Front Door
+
+# switch.lock_user_code:
+#   friendly_name: Enable User Code
+
+# Light
+
+light.ge_14294_inwall_smart_dimmer_level:
+  friendly_name: Bedroom Light
+
+
+# Garage Door
+cover.garage:
+  friendly_name: Garage

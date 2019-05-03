@@ -1,0 +1,274 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret location_latitude
+  longitude: !secret location_longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: !secret location_elevation
+  # metric for Metric, imperial for Imperial
+  unit_system: imperial
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: !secret location_time_zone
+  # Customization file
+  customize: !include customize.yaml
+
+# Show links to resources in log and frontend
+# introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+http:
+  base_url: !secret http_base_url
+  ssl_certificate: !secret http_ssl_certificate
+  ssl_key: !secret http_ssl_key
+#  api_password: !secret http_password // Less secure if enabled
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  include_used_components: true
+
+# Discover some devices automatically
+# discovery:
+
+# Logger
+logger:
+  default: info
+#  logs:
+#    homeassistant.components.august: debug
+#    homeassistant.components.lock.zwave: debug
+
+# Hassio tab
+hassio:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+# map:
+
+# Track the sun
+sun:
+
+# Weather
+weather:
+  - platform: darksky
+    api_key: !secret weather_api_key
+    mode: hourly
+
+# Text to speech
+tts:
+  - platform: google_translate
+    service_name: google_say
+
+# Cloud
+cloud:
+
+# The ffmpeg component allows other Home Assistant components to process video and audio streams
+ffmpeg:
+
+# All smart devices
+nest:
+  client_id: !secret nest_client_id
+  client_secret: !secret nest_client_secret
+
+cover:
+  - platform: myq
+    username: !secret myq_username
+    password: !secret myq_password
+    type: chamberlain
+
+xiaomi_aqara:
+  discovery_retry: 5
+  gateways:
+    - key: !secret xiaomi_gateways_key
+
+# Ring Doorbell/Camera
+ring:
+  username: !secret ring_username
+  password: !secret ring_password
+
+# August door lock
+august:
+   login_method: phone
+   username: !secret august_phonenumber
+   password: !secret august_password
+
+camera:
+  - platform: ring
+
+binary_sensor:
+  - platform: ring
+
+sensor:
+  - platform: ring
+  - platform: time_date
+    display_options:
+      - 'time'
+      - 'date'
+      - 'date_time'
+      - 'time_date'
+      - 'time_utc'
+      - 'beat'
+
+  # sun sensor testing
+  # - platform: template
+  #   sensors:
+  #     solar_angle:
+  #       friendly_name: "Sun angle"
+  #       unit_of_measurement: 'degrees'
+  #       value_template: "{{ states.sun.sun.attributes.elevation }}"
+  #     sunrise:
+  #       value_template: "{{ states.sun.sun.attributes.next_rising }}"
+
+  # Front Deadbolt Status
+  - platform: template
+    sensors:
+      front_door_status:
+        friendly_name: "Front Deadbolt Status"
+        value_template: '{{ states.lock.schlage_be469_touchscreen_deadbolt_locked.attributes.lock_status }}'
+
+  # REST sensor for Google Map directions
+  - platform: rest
+    name: direction_work_to_home
+    json_attributes:
+      - duration
+      - distance
+    resource: !secret google_direction_work_to_home_url
+    method: GET
+    value_template: 'static value for avoiding >255 chars'
+  - platform: template
+    name: work_to_home
+    sensors:
+      duration:
+        friendly_name: "Duration"
+        value_template: '{{ states.sensor.direction_work_to_home.attributes.duration.text }}'
+      distance:
+        friendly_name: "Distance"
+        value_template: '{{ states.sensor.direction_work_to_home.attributes.distance.text }}'
+
+# Z-wave
+zwave:
+  usb_path: /dev/ttyUSB0
+  network_key: !secret zwave_network_key
+
+# Zigbee
+# zha:
+#   usb_path: /dev/ttyUSB1
+#   database_path: /config/zigbee.db
+#   device_config:
+#
+# zigbee:
+#   device: /dev/ttyUSB1
+#   baud: 9600
+
+# Door lock custom user code testing
+# switch:
+#   - platform: template
+#     switches:
+#       lock_user_code:
+#         friendly_name: Enable User Code
+#         entity_id:
+#           - lock.schlage_be469_touchscreen_deadbolt_locked
+#         value_template: "{{ is_state('lock.schlage_be469_touchscreen_deadbolt_locked', 'locked') }}"
+#         turn_on:
+#           service: lock.set_usercode
+#           data:
+#             node_id: 2
+#             code_slot: 2
+#             usercode: xxxxxx # Test code
+#         turn_off:
+#           service: lock.clear_usercode
+#           data:
+#             node_id: 2
+#             code_slot: 2
+
+# Sonoff
+sonoff:
+  username: !secret sonoff_username
+  password: !secret sonoff_password
+  api_region: 'us'
+
+# Alexa Smart Home Integration
+api:
+
+alexa:
+  smart_home:
+    filter:
+      include_entities:
+        - light.ge_14294_inwall_smart_dimmer_level
+        - lock.schlage_be469_touchscreen_deadbolt_locked
+        - cover.garage
+        - script.turn_off_bedroom_light
+        - script.turn_on_bedroom_light_in_morning
+        - script.unlock_garage_second_door
+      include_domains:
+
+# Test Timer
+timer:
+  fresh_air_timer:
+
+input_number:
+  fresh_air_minutes:
+    name: Minutes
+    initial: 0
+    max: 30
+    min: 0
+    step: 1
+  fresh_air_minutes1:
+    name: Minutes 1
+    initial: 0
+    max: 120
+    min: 0
+    step: 15
+  fresh_air_minutes2:
+    name: Minutes 2
+    initial: 0
+    max: 120
+    min: 0
+    step: 15
+  fresh_air_minutes3:
+    name: Minutes 3
+    initial: 0
+    max: 120
+    min: 0
+    step: 15
+  fresh_air_minutes4:
+    name: Minutes 4
+    initial: 0
+    max: 120
+    min: 0
+    step: 15
+
+input_datetime:
+  fresh_air_time1:
+    has_time: true
+  fresh_air_time2:
+    has_time: true
+  fresh_air_time3:
+    has_time: true
+  fresh_air_time4:
+    has_time: true
+
+# Other ref
+automation: !include automations.yaml
+script: !include scripts.yaml
+
+# intent_script: !include intent_script.yaml // Replaced by Haaska
+# group: !include groups.yaml // Replaced by Lovelace??

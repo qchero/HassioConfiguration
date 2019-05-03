@@ -1,0 +1,166 @@
+# # Replaced by Lovelace
+
+# default_view:
+#     icon: mdi:home
+#     view: yes
+#     entities:
+#       - group.doors
+#       - group.lights
+#       - group.nest_thermostat
+#       - group.nest_thermostat_status
+#       - group.xiaomi_sensors
+#       - group.xiaomi_pressure_sensors
+#       - group.door_bell
+
+# # sun:
+# #   name: Sun
+# #   entities:
+# #     - sensor.template
+
+# doors:
+#   name: Doors
+#   control: hidden
+#   entities:
+#     - lock.garage_door
+#     - lock.schlage_be469_touchscreen_deadbolt_locked
+#     - cover.garage
+    
+
+# lights:
+#   name: Lights
+#   entities:
+#     - light.ge_14294_inwall_smart_dimmer_level
+#     - light.gateway_light_7c49eb1a5f3b
+
+# nest_thermostat:
+#   name: Nest Thermostat
+#   entities:
+#     - climate.hallway
+
+# nest_thermostat_status:
+#   name: Nest Thermostat Status
+#   control: hidden
+#   entities:
+#     - sensor.hallway_thermostat_humidity
+#     - sensor.hallway_thermostat_hvac_state
+#     - binary_sensor.hallway_thermostat_fan
+
+# #locks:
+#   #name: Locks
+#   #entities:
+#     #- lock.schlage_be469_touchscreen_deadbolt_locked
+#     #- sensor.front_door_status
+#     #- switch.lock_user_code
+
+# xiaomi_sensors:
+#   name: Xiaomi Sensors
+#   control: hidden
+#   entities:
+#     - sensor.temperature_158d00022fddf2
+#     - sensor.temperature_158d0002725689
+#     - sensor.temperature_158d000272ce68
+#     - sensor.temperature_158d000232166e
+#     - sensor.temperature_158d00023204b3
+#     - sensor.humidity_158d00022fddf2
+#     - sensor.humidity_158d0002725689
+#     - sensor.humidity_158d000272ce68
+#     - sensor.humidity_158d000232166e
+#     - sensor.humidity_158d00023204b3
+#     - binary_sensor.motion_sensor_158d0002427091
+
+
+# xiaomi_pressure_sensors:
+#   name: Xiaomi Sensors - Pressure
+#   control: hidden
+#   entities:
+#     - sensor.pressure_158d00022fddf2
+#     - sensor.pressure_158d0002725689
+#     - sensor.pressure_158d000272ce68
+#     - sensor.pressure_158d00023204b3
+#     - sensor.pressure_158d000232166e
+
+
+# door_bell:
+#   name: Ring Doorbell
+#   control: hidden
+#   entities:
+# #    - binary_sensor.ring_front_door_ding
+#     - binary_sensor.ring_front_door_motion
+#     - binary_sensor.ring_garage_motion
+#     - sensor.ring_front_door_last_ding
+#     - sensor.ring_front_door_last_motion
+#     - sensor.ring_garage_last_motion
+# #    - sensor.ring_front_door_volume
+# #    - sensor.ring_front_door_battery
+# #    - history_graph.temperature
+
+
+# # -- Other tabs --
+
+# cameras:
+#   name: Cameras
+#   view: yes
+#   entities:
+#     - camera.front_door
+# #    - camera.garage
+
+# # failed_xiaomi_sensors:
+# #   name: Failed Xiaomi Sensors
+# #   view: yes
+# #   entities:
+# #    - sensor.temperature_158d000208d60c
+# #    - sensor.temperature_158d000208d575
+# #    - sensor.humidity_158d000208d60c
+# #    - sensor.humidity_158d000208d575
+
+# tests:
+#   name: Test
+#   view: yes
+#   entities:
+#     - zha.zha_ikea_of_sweden_tradfri_wireless_dimmer_fe2bd80c
+#     - binary_sensor.ikea_of_sweden_tradfri_wireless_dimmer_fe2bd80c_1_6
+
+
+# # Lovelace temperature curves
+
+# # - badges: []
+# #   cards:
+# #     - detail: 2
+# #       entity: sensor.hallway_thermostat_temperature
+# #       graph: line
+# #       type: sensor
+# #     - detail: 2
+# #       entity: sensor.temperature_158d00022fddf2
+# #       graph: line
+# #       type: sensor
+# #     - detail: 2
+# #       entity: sensor.temperature_158d0002b56d39
+# #       graph: line
+# #       type: sensor
+# #     - detail: 2
+# #       entity: sensor.temperature_158d0002725689
+# #       graph: line
+# #       type: sensor
+# #     - detail: 2
+# #       entity: sensor.temperature_158d0002b5c943
+# #       graph: line
+# #       type: sensor
+# #     - detail: 2
+# #       entity: sensor.temperature_158d000272ce68
+# #       graph: line
+# #       type: sensor
+# #     - detail: 2
+# #       entity: sensor.temperature_158d000272ff7f
+# #       graph: line
+# #       type: sensor
+# #     - detail: 2
+# #       entity: sensor.temperature_158d000232166e
+# #       graph: line
+# #       type: sensor
+# #     - detail: 2
+# #       entity: sensor.temperature_158d00023204b3
+# #       graph: line
+# #       type: sensor
+# #   icon: 'mdi:thermometer-lines'
+# #   panel: false
+# #   title: Sensors
