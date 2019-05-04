@@ -26,5 +26,8 @@ secrets.yaml
 # python libraries ?
 deps/lib/python*
 
-# sonoff custom_components
-custom_components/sonoff/*
+# custom_components
+custom_components/*
+
+# custom cards
+www/*

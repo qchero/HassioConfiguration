@@ -13,14 +13,14 @@ homeassistant:
   # Customization file
   customize: !include customize.yaml
 
-# Show links to resources in log and frontend
-# introduction:
-
 # Enables the frontend
 frontend:
 
 # Enables configuration UI
 config:
+
+# Custom updater for checking updates for custom components and cards
+custom_updater:
 
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 http:
@@ -127,41 +127,58 @@ sensor:
       - 'time_utc'
       - 'beat'
 
-  # sun sensor testing
-  # - platform: template
-  #   sensors:
-  #     solar_angle:
-  #       friendly_name: "Sun angle"
-  #       unit_of_measurement: 'degrees'
-  #       value_template: "{{ states.sun.sun.attributes.elevation }}"
-  #     sunrise:
-  #       value_template: "{{ states.sun.sun.attributes.next_rising }}"
-
-  # Front Deadbolt Status
-  - platform: template
-    sensors:
-      front_door_status:
-        friendly_name: "Front Deadbolt Status"
-        value_template: '{{ states.lock.schlage_be469_touchscreen_deadbolt_locked.attributes.lock_status }}'
-
+sensor:
   # REST sensor for Google Map directions
   - platform: rest
-    name: direction_work_to_home
+    name: rest_work_to_home
+    scan_interval: 60
     json_attributes:
-      - duration
-      - distance
+      - routes
     resource: !secret google_direction_work_to_home_url
     method: GET
     value_template: 'static value for avoiding >255 chars'
+  - platform: rest
+    name: rest_home_to_work
+    scan_interval: 60
+    json_attributes:
+      - routes
+    resource: !secret google_direction_home_to_work_url
+    method: GET
+    value_template: 'static value for avoiding >255 chars'
   - platform: template
-    name: work_to_home
     sensors:
-      duration:
-        friendly_name: "Duration"
-        value_template: '{{ states.sensor.direction_work_to_home.attributes.duration.text }}'
-      distance:
-        friendly_name: "Distance"
-        value_template: '{{ states.sensor.direction_work_to_home.attributes.distance.text }}'
+      duration_work_to_home:
+        friendly_name: "Duration Home"
+        unit_of_measurement: minutes
+        value_template: >
+          {{ (states.sensor.rest_work_to_home.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(0) }}
+      distance_work_to_home:
+        friendly_name: "Distance Home"
+        unit_of_measurement: mi
+        value_template: >
+          {{ (states.sensor.rest_work_to_home.attributes.routes[0].legs[0].distance.value * 0.000621371) | round(1) }}
+      duration_home_to_work:
+        friendly_name: "Duration to Work"
+        unit_of_measurement: minutes
+        value_template: >
+          {{ (states.sensor.rest_home_to_work.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(0) }}
+      distance_home_to_work:
+        friendly_name: "Distance to Work"
+        unit_of_measurement: mi
+        value_template: >
+          {{ (states.sensor.rest_home_to_work.attributes.routes[0].legs[0].distance.value * 0.000621371) | round(1) }}
+
+  # Template sensors
+  - platform: template
+    sensors:
+      # which direction to use in Google Map
+      work_or_home_direction:
+        value_template: >
+          {% if (states.sensor.time.state >= "12:00" and states.sensor.time.state <= "20:00") %}
+            home
+          {% else %}
+            work
+          {% endif %}
 
 # Z-wave
 zwave:
@@ -224,46 +241,42 @@ alexa:
 timer:
   fresh_air_timer:
 
+# Input numbers
 input_number:
-  fresh_air_minutes:
-    name: Minutes
-    initial: 0
-    max: 30
-    min: 0
-    step: 1
-  fresh_air_minutes1:
-    name: Minutes 1
-    initial: 0
+  fresh_air_minutes_1:
+    name: Duration Minute 1
     max: 120
     min: 0
-    step: 15
-  fresh_air_minutes2:
-    name: Minutes 2
-    initial: 0
+    step: 5
+  fresh_air_minutes_2:
+    name: Duration Minute 2
     max: 120
     min: 0
-    step: 15
-  fresh_air_minutes3:
-    name: Minutes 3
-    initial: 0
+    step: 5
+  fresh_air_minutes_3:
+    name: Duration Minute 3
     max: 120
     min: 0
-    step: 15
-  fresh_air_minutes4:
-    name: Minutes 4
-    initial: 0
+    step: 5
+  fresh_air_minutes_4:
+    name: Duration Minute 4
     max: 120
     min: 0
-    step: 15
+    step: 5
 
+# Input datetime
 input_datetime:
-  fresh_air_time1:
+  fresh_air_time_1:
+    name: Start Time 1
     has_time: true
-  fresh_air_time2:
+  fresh_air_time_2:
+    name: Start Time 2
     has_time: true
-  fresh_air_time3:
+  fresh_air_time_3:
+    name: Start Time 3
     has_time: true
-  fresh_air_time4:
+  fresh_air_time_4:
+    name: Start Time 4
     has_time: true
 
 # Other ref
