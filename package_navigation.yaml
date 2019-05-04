@@ -1,0 +1,52 @@
+sensor:
+  # REST sensor for Google Map directions
+  - platform: rest
+    name: rest_work_to_home
+    scan_interval: 60
+    json_attributes:
+      - routes
+    resource: !secret google_direction_work_to_home_url
+    method: GET
+    value_template: 'static value for avoiding >255 chars'
+  - platform: rest
+    name: rest_home_to_work
+    scan_interval: 60
+    json_attributes:
+      - routes
+    resource: !secret google_direction_home_to_work_url
+    method: GET
+    value_template: 'static value for avoiding >255 chars'
+  - platform: template
+    sensors:
+      duration_work_to_home:
+        friendly_name: "Duration Home"
+        unit_of_measurement: minutes
+        value_template: >
+          {{ (states.sensor.rest_work_to_home.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(0) }}
+      distance_work_to_home:
+        friendly_name: "Distance Home"
+        unit_of_measurement: mi
+        value_template: >
+          {{ (states.sensor.rest_work_to_home.attributes.routes[0].legs[0].distance.value * 0.000621371) | round(1) }}
+      duration_home_to_work:
+        friendly_name: "Duration to Work"
+        unit_of_measurement: minutes
+        value_template: >
+          {{ (states.sensor.rest_home_to_work.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(0) }}
+      distance_home_to_work:
+        friendly_name: "Distance to Work"
+        unit_of_measurement: mi
+        value_template: >
+          {{ (states.sensor.rest_home_to_work.attributes.routes[0].legs[0].distance.value * 0.000621371) | round(1) }}
+
+  # Template sensors
+  - platform: template
+    sensors:
+      # which direction to use in Google Map
+      work_or_home_direction:
+        value_template: >
+          {% if (states.sensor.time.state >= "12:00" and states.sensor.time.state <= "20:00") %}
+            home
+          {% else %}
+            work
+          {% endif %}
