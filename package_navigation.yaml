@@ -2,7 +2,7 @@ sensor:
   # REST sensor for Google Map directions
   - platform: rest
     name: rest_work_to_home
-    scan_interval: 60
+    scan_interval: 1800
     json_attributes:
       - routes
     resource: !secret google_direction_work_to_home_url
@@ -10,7 +10,7 @@ sensor:
     value_template: 'static value for avoiding >255 chars'
   - platform: rest
     name: rest_home_to_work
-    scan_interval: 60
+    scan_interval: 1800
     json_attributes:
       - routes
     resource: !secret google_direction_home_to_work_url
@@ -38,6 +38,14 @@ sensor:
         unit_of_measurement: mi
         value_template: >
           {{ (states.sensor.rest_home_to_work.attributes.routes[0].legs[0].distance.value * 0.000621371) | round(1) }}
+      last_updated_work_to_home:
+        friendly_name: Direction Home Last Updated
+        value_template: >
+          {{ states.sensor.rest_work_to_home.last_updated }}
+      last_updated_home_to_work:
+        friendly_name: Direction to Work Last Updated
+        value_template: >
+          {{ states.sensor.rest_home_to_work.last_updated }}
 
   # Template sensors
   - platform: template
@@ -50,3 +58,46 @@ sensor:
           {% else %}
             work
           {% endif %}
+
+automation:
+  - alias: "Periodic update - Direction to Work"
+    initial_state: true
+    trigger:
+      platform: time_pattern
+      minutes: '/3'
+    condition:
+      condition: time
+      after: '08:30:00'
+      before: '11:00:00'
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+    action:
+      - service:
+          homeassistant.update_entity
+        entity_id:
+          sensor.rest_home_to_work
+  - alias: "Periodic update - Direction Home"
+    initial_state: true
+    trigger:
+      platform: time_pattern
+      minutes: '/3'
+    condition:
+      condition: time
+      after: '16:30:00'
+      before: '19:00:00'
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+    action:
+      - service:
+          homeassistant.update_entity
+        entity_id:
+          sensor.rest_work_to_home
+        

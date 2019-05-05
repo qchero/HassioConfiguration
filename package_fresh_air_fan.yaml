@@ -35,3 +35,119 @@ input_datetime:
   fresh_air_time_4:
     name: Start Time 4
     has_time: true
+
+# Input numbers for overrides
+input_boolean:
+  fresh_air_always_on:
+    name: Always On
+    icon: mdi:fan
+  fresh_air_always_off:
+    name: Always Off
+    icon: mdi:fan
+
+# homeassistant:
+#   customize:
+#     input_boolean.fresh_air_always_on:
+#       templates:
+#         rgb_color: >
+#           if (state === 'on') return [6,85,53];
+#           return [6,85,53];
+#     input_boolean.fresh_air_always_off:
+#       templates:
+#         rgb_color: >
+#           if (state === 'on') return [128,0,0];
+#           return [6,85,53];
+
+# Switches for overrides
+# switch:
+#   - platform: template
+#     switches:
+#       fresh_air_always_on:
+#         friendly_name: Always On
+#         value_template: >
+#           {{ states.input_boolean.fresh_air_always_on.state }}
+#         turn_on:
+#           - service: input_boolean.turn_on
+#             entity_id: input_boolean.fresh_air_always_on
+#         turn_off:
+#           - service: input_boolean.turn_off
+#             entity_id: input_boolean.fresh_air_always_on
+
+# Automation
+automation:
+- alias: "Always on is set - Turn off always off"
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: input_boolean.fresh_air_always_on
+    to: 'on'
+  action:
+    service: input_boolean.turn_off
+    entity_id: input_boolean.fresh_air_always_off
+
+- alias: "Always off is set - Turn off always on"
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: input_boolean.fresh_air_always_off
+    to: 'on'
+  action:
+    service: input_boolean.turn_off
+    entity_id: input_boolean.fresh_air_always_on  
+
+- alias: "Every Minute or Override changes - Schedule fresh air fan"
+  initial_state: true
+  trigger:
+    - platform: time_pattern
+      seconds: 0
+    - platform: state
+      entity_id: input_boolean.fresh_air_always_on
+    - platform: state
+      entity_id: input_boolean.fresh_air_always_off
+  #condition:
+    # condition: time
+    # after: '09:00:00'
+    # before: '22:00:00'
+  action:
+    # 4 time & duration settings for fresh air fan
+    service_template: >
+      {% set current_time = states('sensor.time') %}
+      {% set start_time_1 = states.input_datetime.fresh_air_time_1.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
+      {% set input_minute_1 = states.input_number.fresh_air_minutes_1.state | int %}
+      {% set end_time_1 = (states.input_datetime.fresh_air_time_1.attributes.timestamp + input_minute_1 * 60) | int | timestamp_custom('%H:%M', False) %}
+      {% set start_time_2 = states.input_datetime.fresh_air_time_2.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
+      {% set input_minute_2 = states.input_number.fresh_air_minutes_2.state | int %}
+      {% set end_time_2 = (states.input_datetime.fresh_air_time_2.attributes.timestamp + input_minute_2 * 60) | int | timestamp_custom('%H:%M', False) %}
+      {% set start_time_3 = states.input_datetime.fresh_air_time_3.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
+      {% set input_minute_3 = states.input_number.fresh_air_minutes_3.state | int %}
+      {% set end_time_3 = (states.input_datetime.fresh_air_time_3.attributes.timestamp + input_minute_3 * 60) | int | timestamp_custom('%H:%M', False) %}
+      {% set start_time_4 = states.input_datetime.fresh_air_time_4.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
+      {% set input_minute_4 = states.input_number.fresh_air_minutes_4.state | int %}
+      {% set end_time_4 = (states.input_datetime.fresh_air_time_4.attributes.timestamp + input_minute_4 * 60) | int | timestamp_custom('%H:%M', False) %}
+      {% if
+        (
+          (states.input_boolean.fresh_air_always_off.state != 'on') and
+          (
+            states.input_boolean.fresh_air_always_on.state == 'on' or
+            (
+              (input_minute_1 > 0 and
+              current_time >= start_time_1 and
+              current_time <= end_time_1) or
+              (input_minute_2 > 0 and
+              current_time >= start_time_2 and
+              current_time <= end_time_2) or
+              (input_minute_3 > 0 and
+              current_time >= start_time_3 and
+              current_time <= end_time_3) or
+              (input_minute_4 > 0 and
+              current_time >= start_time_4 and
+              current_time <= end_time_4)
+            )
+          )
+        )
+      %}
+      switch.turn_on
+      {% else %}
+      switch.turn_off
+      {% endif %}
+    entity_id: switch.sonoff_10004f6d35

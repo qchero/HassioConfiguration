@@ -33,7 +33,6 @@ http:
   base_url: !secret http_base_url
   ssl_certificate: !secret http_ssl_certificate
   ssl_key: !secret http_ssl_key
-#  api_password: !secret http_password // Less secure if enabled
 
 # Checks for available updates
 # Note: This component will send some information about your system to
@@ -43,9 +42,6 @@ http:
 updater:
   # Optional, allows Home Assistant developers to focus on popular components.
   include_used_components: true
-
-# Discover some devices automatically
-# discovery:
 
 # Logger
 logger:
@@ -57,17 +53,11 @@ logger:
 # Hassio tab
 hassio:
 
-# Allows you to issue voice commands from the frontend in enabled browsers
-conversation:
-
 # Enables support for tracking state changes over time
 history:
 
 # View all events in a logbook
 logbook:
-
-# Track the sun
-sun:
 
 # Weather
 weather:
@@ -75,25 +65,19 @@ weather:
     api_key: !secret weather_api_key
     mode: hourly
 
-# Text to speech
-tts:
-  - platform: google_translate
-    service_name: google_say
-
-# Cloud
-cloud:
-
-# All smart devices
+# Nest Thermostat
 nest:
   client_id: !secret nest_client_id
   client_secret: !secret nest_client_secret
 
+# MyQ garage door
 cover:
   - platform: myq
     username: !secret myq_username
     password: !secret myq_password
     type: chamberlain
 
+# Mi jia sensors
 xiaomi_aqara:
   discovery_retry: 5
   gateways:
@@ -110,6 +94,7 @@ august:
    username: !secret august_phonenumber
    password: !secret august_password
 
+# Ring
 camera:
   - platform: ring
 
@@ -118,6 +103,9 @@ binary_sensor:
 
 sensor:
   - platform: ring
+
+# Date time
+sensor datetime:
   - platform: time_date
     display_options:
       - 'time'
@@ -154,8 +142,5 @@ alexa:
       include_domains:
 
 # Other ref
-automation: !include automations.yaml
+# automation: !include automations.yaml
 script: !include scripts.yaml
-
-# intent_script: !include intent_script.yaml // Replaced by Haaska
-# group: !include groups.yaml // Replaced by Lovelace??
