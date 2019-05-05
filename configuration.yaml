@@ -141,6 +141,5 @@ alexa:
         - script.unlock_garage_second_door
       include_domains:
 
-# Other ref
-# automation: !include automations.yaml
+# Scripts for Alexa
 script: !include scripts.yaml
