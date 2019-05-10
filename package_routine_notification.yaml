@@ -1,0 +1,25 @@
+automation:
+  - alias: Startup Notification
+    initial_state: true
+    trigger:
+      - platform: homeassistant
+        event: start
+    action:
+      service: ifttt.trigger
+      data_template:
+        event: notification
+        value1: Hassio starting
+        value2: >
+          Hassio starting at {{ states.sensor.time.state }}
+  - alias: Shutdown Notification
+    initial_state: true
+    trigger:
+      - platform: homeassistant
+        event: shutdown
+    action:
+      service: ifttt.trigger
+      data_template:
+        event: notification
+        value1: Hassio shutting down
+        value2: >
+          Hassio starting at {{ states.sensor.time.state }}

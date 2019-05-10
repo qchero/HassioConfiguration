@@ -18,9 +18,23 @@ homeassistant:
     package_navigation: !include package_navigation.yaml
     # Fresh air fan schedule
     package_fresh_air_fan: !include package_fresh_air_fan.yaml
+    # Routine notification
+    package_routine_notification: !include package_routine_notification.yaml
 
 # Enables the frontend
 frontend:
+
+# Hassio tab
+hassio:
+
+# Enables support for tracking state changes over time
+recorder: !include recorder.yaml
+
+# History
+history:
+
+# Logbook
+logbook:
 
 # Enables configuration UI
 config:
@@ -33,6 +47,8 @@ http:
   base_url: !secret http_base_url
   ssl_certificate: !secret http_ssl_certificate
   ssl_key: !secret http_ssl_key
+  login_attempts_threshold: 5
+  ip_ban_enabled: true
 
 # Checks for available updates
 # Note: This component will send some information about your system to
@@ -46,18 +62,6 @@ updater:
 # Logger
 logger:
   default: info
-#  logs:
-#    homeassistant.components.august: debug
-#    homeassistant.components.lock.zwave: debug
-
-# Hassio tab
-hassio:
-
-# Enables support for tracking state changes over time
-history:
-
-# View all events in a logbook
-logbook:
 
 # Weather
 weather:
@@ -109,11 +113,7 @@ sensor datetime:
   - platform: time_date
     display_options:
       - 'time'
-      - 'date'
       - 'date_time'
-      - 'time_date'
-      - 'time_utc'
-      - 'beat'
 
 # Z-wave
 zwave:
@@ -125,6 +125,14 @@ sonoff:
   username: !secret sonoff_username
   password: !secret sonoff_password
   api_region: 'us'
+
+# TV & box
+media_player:
+  - platform: samsungtv
+    host: !secret samsungtv_host
+    port: 8001
+    mac: !secret samsungtv_mac
+  - platform: xiaomi_tv
 
 # Alexa Smart Home Integration
 api:
@@ -143,3 +151,7 @@ alexa:
 
 # Scripts for Alexa
 script: !include scripts.yaml
+
+# IFTTT
+ifttt:
+  key: !secret ifttt_key

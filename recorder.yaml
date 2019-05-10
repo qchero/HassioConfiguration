@@ -1,0 +1,18 @@
+include:
+  domains:
+    - binary_sensor
+    - camera
+    - climate
+    - cover
+    - light
+    - lock
+    - sensor
+    - sonoff
+    - switch
+exclude:
+  entities:
+    - sensor.time
+    - sensor.date_time
+    - sensor.last_updated_home_to_work
+    - sensor.last_updated_work_to_home
+    - binary_sensor.ring_front_door_motion

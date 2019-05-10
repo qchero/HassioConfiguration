@@ -2,14 +2,16 @@
 #   friendly_name: Nest Thermostat
 #   unit_of_measurement: 'Fahrenheit'
 
-# binary_sensor.hallway_thermostat_fan:
-#   friendly_name: Nest Fan
+
 
 # sensor.hallway_thermostat_humidity:
 #   friendly_name: Nest
 #   icon: mdi:water-percent
 
 # Nest:
+
+binary_sensor.hallway_thermostat_fan:
+  friendly_name: Nest Fan
 
 sensor.hallway_thermostat_temperature:
   friendly_name: Hallway
@@ -151,3 +153,7 @@ light.ge_14294_inwall_smart_dimmer_level:
 # Garage Door
 cover.garage:
   friendly_name: Garage
+
+switch.sonoff_10004f6d35:
+  friendly_name: Fresh Air Fan
+  icon: mdi:fan
