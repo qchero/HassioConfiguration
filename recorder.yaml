@@ -1,3 +1,4 @@
+db_url: mysql://hass:qcheromaria@core-mariadb/homeassistant?charset=utf8
 include:
   domains:
     - binary_sensor
@@ -16,3 +17,6 @@ exclude:
     - sensor.last_updated_home_to_work
     - sensor.last_updated_work_to_home
     - binary_sensor.ring_front_door_motion
+    - binary_sensor.ring_garage_motion
+    - sensor.ring_front_door_last_activity
+    - sensor.ring_garage_last_activity

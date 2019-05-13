@@ -43,83 +43,106 @@ input_boolean:
     icon: mdi:fan
   fresh_air_always_off:
     name: Always Off
-    icon: mdi:fan
+    icon: mdi:fan-off
+
+# Template sensor
+sensor:
+  - platform: template
+    sensors:
+      true_outdoor_temperature:
+        unit_of_measurement: '°F'
+        value_template: >
+          {% set driveway_temp = states('sensor.temperature_158d000272ff7f') | float %}
+          {% set patio_temp = states('sensor.temperature_158d00023204b3') | float %}
+          {% macro min(X, Y) -%} {{ X if X|float < Y|float else Y }} {%- endmacro %}
+          {% if (driveway_temp == 0) %}
+          {{ patio_temp | round(1) }}
+          {% else %}
+          {{ [driveway_temp + 3, patio_temp + 3, (driveway_temp + patio_temp) / 2] | min | round(1) }}
+          {% endif %}
+      true_indoor_temperature:
+        unit_of_measurement: '°F'
+        value_template: >
+          {% set living_temp = states('sensor.temperature_158d0002b56d39') | float %}
+          {% set master_bed_temp = states('sensor.temperature_158d00022fddf2') | float %}
+          {% set study_temp = states('sensor.temperature_158d000272ce68') | float %}
+          {{ (living_temp + master_bed_temp) / 2 | round(1) }}
 
 # Automation
 automation:
-- alias: "Always on is set - Turn off always off"
-  initial_state: true
-  trigger:
-    platform: state
-    entity_id: input_boolean.fresh_air_always_on
-    to: 'on'
-  action:
-    service: input_boolean.turn_off
-    entity_id: input_boolean.fresh_air_always_off
-
-- alias: "Always off is set - Turn off always on"
-  initial_state: true
-  trigger:
-    platform: state
-    entity_id: input_boolean.fresh_air_always_off
-    to: 'on'
-  action:
-    service: input_boolean.turn_off
-    entity_id: input_boolean.fresh_air_always_on  
-
-- alias: "Every Minute or Override changes - Schedule fresh air fan"
-  initial_state: true
-  trigger:
-    - platform: time_pattern
-      seconds: 0
-    - platform: state
+  - alias: Always on is set - Turn off always off
+    initial_state: true
+    trigger:
+      platform: state
       entity_id: input_boolean.fresh_air_always_on
-    - platform: state
+      to: 'on'
+    action:
+      service: input_boolean.turn_off
       entity_id: input_boolean.fresh_air_always_off
-  #condition:
-    # condition: time
-    # after: '09:00:00'
-    # before: '22:00:00'
-  action:
-    # 4 time & duration settings for fresh air fan
-    service_template: >
-      {% set current_time = states('sensor.time') %}
-      {% set start_time_1 = states.input_datetime.fresh_air_time_1.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
-      {% set input_minute_1 = states.input_number.fresh_air_minutes_1.state | int %}
-      {% set end_time_1 = (states.input_datetime.fresh_air_time_1.attributes.timestamp + input_minute_1 * 60) | int | timestamp_custom('%H:%M', False) %}
-      {% set start_time_2 = states.input_datetime.fresh_air_time_2.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
-      {% set input_minute_2 = states.input_number.fresh_air_minutes_2.state | int %}
-      {% set end_time_2 = (states.input_datetime.fresh_air_time_2.attributes.timestamp + input_minute_2 * 60) | int | timestamp_custom('%H:%M', False) %}
-      {% set start_time_3 = states.input_datetime.fresh_air_time_3.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
-      {% set input_minute_3 = states.input_number.fresh_air_minutes_3.state | int %}
-      {% set end_time_3 = (states.input_datetime.fresh_air_time_3.attributes.timestamp + input_minute_3 * 60) | int | timestamp_custom('%H:%M', False) %}
-      {% set start_time_4 = states.input_datetime.fresh_air_time_4.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
-      {% set input_minute_4 = states.input_number.fresh_air_minutes_4.state | int %}
-      {% set end_time_4 = (states.input_datetime.fresh_air_time_4.attributes.timestamp + input_minute_4 * 60) | int | timestamp_custom('%H:%M', False) %}
-      {% if
-        (
-          (states.input_boolean.fresh_air_always_off.state != 'on') and
+
+  - alias: "Always off is set - Turn off always on"
+    initial_state: true
+    trigger:
+      platform: state
+      entity_id: input_boolean.fresh_air_always_off
+      to: 'on'
+    action:
+      service: input_boolean.turn_off
+      entity_id: input_boolean.fresh_air_always_on
+
+  - alias: Every Minute or Override changes - Schedule fresh air fan
+    initial_state: true
+    trigger:
+      - platform: time_pattern
+        seconds: 0
+      - platform: state
+        entity_id: input_boolean.fresh_air_always_on
+      - platform: state
+        entity_id: input_boolean.fresh_air_always_off
+    action:
+      # 4 time & duration settings for fresh air fan
+      service_template: >
+        {% set current_time = states('sensor.time') %}
+        {% set start_time_1 = states.input_datetime.fresh_air_time_1.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
+        {% set input_minute_1 = states.input_number.fresh_air_minutes_1.state | int %}
+        {% set end_time_1 = (states.input_datetime.fresh_air_time_1.attributes.timestamp + input_minute_1 * 60) | int | timestamp_custom('%H:%M', False) %}
+        {% set start_time_2 = states.input_datetime.fresh_air_time_2.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
+        {% set input_minute_2 = states.input_number.fresh_air_minutes_2.state | int %}
+        {% set end_time_2 = (states.input_datetime.fresh_air_time_2.attributes.timestamp + input_minute_2 * 60) | int | timestamp_custom('%H:%M', False) %}
+        {% set start_time_3 = states.input_datetime.fresh_air_time_3.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
+        {% set input_minute_3 = states.input_number.fresh_air_minutes_3.state | int %}
+        {% set end_time_3 = (states.input_datetime.fresh_air_time_3.attributes.timestamp + input_minute_3 * 60) | int | timestamp_custom('%H:%M', False) %}
+        {% set start_time_4 = states.input_datetime.fresh_air_time_4.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
+        {% set input_minute_4 = states.input_number.fresh_air_minutes_4.state | int %}
+        {% set end_time_4 = (states.input_datetime.fresh_air_time_4.attributes.timestamp + input_minute_4 * 60) | int | timestamp_custom('%H:%M', False) %}
+        {% if
           (
-            states.input_boolean.fresh_air_always_on.state == 'on' or
+            (states.input_boolean.fresh_air_always_off.state != 'on') and
             (
-              (input_minute_1 > 0 and
-              current_time >= start_time_1 and
-              current_time <= end_time_1) or
-              (input_minute_2 > 0 and
-              current_time >= start_time_2 and
-              current_time <= end_time_2) or
-              (input_minute_3 > 0 and
-              current_time >= start_time_3 and
-              current_time <= end_time_3) or
-              (input_minute_4 > 0 and
-              current_time >= start_time_4 and
-              current_time <= end_time_4)
+              states.input_boolean.fresh_air_always_on.state == 'on' or
+              (
+                (input_minute_1 > 0 and
+                current_time >= start_time_1 and
+                current_time <= end_time_1) or
+                (input_minute_2 > 0 and
+                current_time >= start_time_2 and
+                current_time <= end_time_2) or
+                (input_minute_3 > 0 and
+                current_time >= start_time_3 and
+                current_time <= end_time_3) or
+                (input_minute_4 > 0 and
+                current_time >= start_time_4 and
+                current_time <= end_time_4)
+              ) or
+              (
+                (states('sensor.true_indoor_temperature') | float) > 75 and
+                (states('sensor.true_indoor_temperature') | float) >= (states('sensor.true_outdoor_temperature') | float) + 15
+              )
             )
           )
-        )
-      %}
-      switch.turn_on
-      {% else %}
-      switch.turn_off
-      {% endif %}
-    entity_id: switch.sonoff_10004f6d35
+        %}
+        switch.turn_on
+        {% else %}
+        switch.turn_off
+        {% endif %}
+      entity_id: switch.sonoff_10004f6d35

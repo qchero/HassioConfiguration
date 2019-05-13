@@ -31,3 +31,6 @@ custom_components/*
 
 # custom cards
 www/*
+
+# random notes
+notes.md

@@ -143,7 +143,6 @@ alexa:
       include_entities:
         - light.ge_14294_inwall_smart_dimmer_level
         - lock.schlage_be469_touchscreen_deadbolt_locked
-        - cover.garage
         - script.turn_off_bedroom_light
         - script.turn_on_bedroom_light_in_morning
         - script.unlock_garage_second_door

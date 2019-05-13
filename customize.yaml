@@ -35,13 +35,13 @@ sensor.temperature_158d00023204b3:
 
 # Aqara temperature sensor #2:
 
-sensor.humidity_158d000232166e:
+sensor.humidity_158d000272ff7f:
   friendly_name: Driveway
 
-sensor.pressure_158d000232166e:
+sensor.pressure_158d000272ff7f:
   friendly_name: Driveway
 
-sensor.temperature_158d000232166e:
+sensor.temperature_158d000272ff7f:
   friendly_name: Driveway
 
 # Aqara temperature sensor #3:
@@ -110,13 +110,13 @@ sensor.temperature_158d0002b5c943:
 
 # Xiaomi temperature sensor #8
 
-sensor.humidity_158d000272ff7f:
+sensor.humidity_158d000232166e:
   friendly_name: Garage
 
-sensor.pressure_158d000272ff7f:
+sensor.pressure_158d000232166e:
   friendly_name: Garage
 
-sensor.temperature_158d000272ff7f:
+sensor.temperature_158d000232166e:
   friendly_name: Garage
 
 
@@ -152,7 +152,7 @@ light.ge_14294_inwall_smart_dimmer_level:
 
 # Garage Door
 cover.garage:
-  friendly_name: Garage
+  friendly_name: Garage Door
 
 switch.sonoff_10004f6d35:
   friendly_name: Fresh Air Fan
