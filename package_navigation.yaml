@@ -16,6 +16,44 @@ sensor:
     resource: !secret google_direction_home_to_work_url
     method: GET
     value_template: 'static value for avoiding >255 chars'
+
+  # POI 1
+  - platform: rest
+    name: rest_work_to_poi1
+    scan_interval: 30
+    json_attributes:
+      - routes
+    resource: !secret google_direction_work_to_poi1_url
+    method: GET
+    value_template: 'static value for avoiding >255 chars'
+  - platform: rest
+    name: rest_poi1_to_work
+    scan_interval: 30
+    json_attributes:
+      - routes
+    resource: !secret google_direction_poi1_to_work_url
+    method: GET
+    value_template: 'static value for avoiding >255 chars'
+
+  # POI 2
+  - platform: rest
+    name: rest_work_to_poi2
+    scan_interval: 30
+    json_attributes:
+      - routes
+    resource: !secret google_direction_work_to_poi2_url
+    method: GET
+    value_template: 'static value for avoiding >255 chars'
+  - platform: rest
+    name: rest_poi2_to_work
+    scan_interval: 30
+    json_attributes:
+      - routes
+    resource: !secret google_direction_poi2_to_work_url
+    method: GET
+    value_template: 'static value for avoiding >255 chars'
+
+  # Template
   - platform: template
     sensors:
       duration_work_to_home:
@@ -46,6 +84,40 @@ sensor:
         friendly_name: Direction to Work Last Updated
         value_template: >
           {{ states.sensor.rest_home_to_work.last_updated }}
+
+      # Comparison
+      duration_commute_home:
+        unit_of_measurement: minutes
+        value_template: >
+          {% if (states('sensor.work_or_home_direction') == "home") %}
+          {{ (states.sensor.rest_work_to_home.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(0) }}
+          {% else %}
+          {{ (states.sensor.rest_home_to_work.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(0) }}
+          {% endif %}
+      distance_commute_home:
+        unit_of_measurement: mi
+        value_template: >
+          {% if (states('sensor.work_or_home_direction') == "home") %}
+          {{ (states.sensor.rest_work_to_home.attributes.routes[0].legs[0].distance.value | float / 60) | round(0) }}
+          {% else %}
+          {{ (states.sensor.rest_home_to_work.attributes.routes[0].legs[0].distance.value | float / 60) | round(0) }}
+          {% endif %}
+      duration_commute_poi1:
+        unit_of_measurement: minutes
+        value_template: >
+          {% if (states('sensor.work_or_home_direction') == "home") %}
+          {{ (states.sensor.rest_work_to_poi1.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(0) }}
+          {% else %}
+          {{ (states.sensor.rest_poi1_to_work.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(0) }}
+          {% endif %}
+      distance_commute_poi1:
+        unit_of_measurement: mi
+        value_template: >
+          {% if (states('sensor.work_or_home_direction') == "home") %}
+          {{ (states.sensor.rest_work_to_poi1.attributes.routes[0].legs[0].distance.value | float / 60) | round(0) }}
+          {% else %}
+          {{ (states.sensor.rest_poi1_to_work.attributes.routes[0].legs[0].distance.value | float / 60) | round(0) }}
+          {% endif %}
 
   # Template sensors
   - platform: template
@@ -83,6 +155,10 @@ automation:
     action:
       - service: homeassistant.update_entity
         entity_id: sensor.rest_home_to_work
+      - service: homeassistant.update_entity
+        entity_id: sensor.rest_poi1_to_work
+      - service: homeassistant.update_entity
+        entity_id: sensor.rest_poi2_to_work
   - alias: Periodic update - Direction Home
     initial_state: true
     trigger:
@@ -101,6 +177,10 @@ automation:
     action:
       - service: homeassistant.update_entity
         entity_id: sensor.rest_work_to_home
+      - service: homeassistant.update_entity
+        entity_id: sensor.rest_work_to_poi1
+      - service: homeassistant.update_entity
+        entity_id: sensor.rest_work_to_poi2
   - alias: Notification - Reset counter
     initial_state: true
     trigger:
@@ -133,7 +213,7 @@ automation:
         below: 25
       - condition: numeric_state
         entity_id: counter.time_to_go_home_notification_counter
-        below: 5
+        below: 3
     action:
       - service: ifttt.trigger
         data_template:

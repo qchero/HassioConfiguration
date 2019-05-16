@@ -90,6 +90,23 @@ automation:
       service: input_boolean.turn_off
       entity_id: input_boolean.fresh_air_always_on
 
+  - alias: "Fan override is set for a long time - Turn off override"
+    initial_state: true
+    trigger:
+      - platform: state
+        entity_id: input_boolean.fresh_air_always_on
+        to: 'on'
+        for: '00:30:00'
+      - platform: state
+        entity_id: input_boolean.fresh_air_always_off
+        to: 'on'
+        for: '00:30:00'
+    action:
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.fresh_air_always_on
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.fresh_air_always_off
+
   - alias: Every Minute or Override changes - Schedule fresh air fan
     initial_state: true
     trigger:
