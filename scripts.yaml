@@ -6,27 +6,27 @@ turn_off_bedroom_light:
     - service_template:
         light.turn_off
       data_template:
-        entity_id: light.ge_14294_inwall_smart_dimmer_level
+        entity_id: light.jasco_products_14294_in_wall_smart_dimmer_level_3
         transition: 2
     - delay: '00:00:10'
     - service_template:
         light.turn_off
       data_template:
-        entity_id: light.ge_14294_inwall_smart_dimmer_level
+        entity_id: light.jasco_products_14294_in_wall_smart_dimmer_level_3
 
 turn_on_bedroom_light_in_morning:
   sequence:
     - service_template:
         light.turn_on
       data_template:
-        entity_id: light.ge_14294_inwall_smart_dimmer_level
+        entity_id: light.jasco_products_14294_in_wall_smart_dimmer_level_3
         brightness_pct: 20
         transition: 2
     - delay: '00:00:10'
     - service_template:
         light.turn_on
       data_template:
-        entity_id: light.ge_14294_inwall_smart_dimmer_level
+        entity_id: light.jasco_products_14294_in_wall_smart_dimmer_level_3
         brightness_pct: 100
         transition: 300
 
@@ -37,7 +37,7 @@ both_leave_home:
     - service_template:
         light.turn_off
       data_template:
-        entity_id: light.ge_14294_inwall_smart_dimmer_level
+        entity_id: light.jasco_products_14294_in_wall_smart_dimmer_level_3
         transition: 2
     - service_template:
         lock.lock

@@ -1,0 +1,27 @@
+input_number:
+  price_stock1:
+    min: 0
+    max: 1000000
+    step: 0.001
+  quantity_stock1:
+    min: 0
+    max: 1000000
+  target_quantity_stock1:
+    min: 0
+    max: 1000000
+
+sensor:
+  - platform: template
+    sensors:
+      price_stock1:
+        value_template: >
+          {{ states('input_number.price_stock1') }}
+        unit_of_measurement: "$"
+      quantity_stock1:
+        value_template: >
+          {{ states('input_number.quantity_stock1') }}
+        unit_of_measurement: "share"
+      target_quantity_stock1:
+        value_template: >
+          {{ states('input_number.target_quantity_stock1') }}
+        unit_of_measurement: "share"

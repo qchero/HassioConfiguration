@@ -1,21 +1,12 @@
 homeassistant:
-  # Name of the location where Home Assistant is running
-  name: Home
-  # Location required to calculate the time the sun rises and sets
-  latitude: !secret location_latitude
-  longitude: !secret location_longitude
-  # Impacts weather/sunrise data (altitude above sea level in meters)
-  elevation: !secret location_elevation
-  # metric for Metric, imperial for Imperial
-  unit_system: imperial
-  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-  time_zone: !secret location_time_zone
   # Customization file
   customize: !include customize.yaml
   # Packages
   packages:
     # Google map navigation
     package_navigation: !include package_navigation.yaml
+    # Stock trading
+    package_stock: !include package_stock.yaml
     # Fresh air fan schedule
     package_fresh_air_fan: !include package_fresh_air_fan.yaml
     # Routine notification
@@ -38,6 +29,9 @@ logbook:
 
 # Enables configuration UI
 config:
+
+# System Health
+system_health:
 
 # Custom updater for checking updates for custom components and cards
 custom_updater:
@@ -132,7 +126,7 @@ media_player:
     host: !secret samsungtv_host
     port: 8001
     mac: !secret samsungtv_mac
-  - platform: xiaomi_tv
+# - platform: xiaomi_tv
 
 # Alexa Smart Home Integration
 api:
@@ -141,8 +135,11 @@ alexa:
   smart_home:
     filter:
       include_entities:
-        - light.ge_14294_inwall_smart_dimmer_level
-        - lock.schlage_be469_touchscreen_deadbolt_locked
+        - light.jasco_products_14294_in_wall_smart_dimmer_level
+        - light.jasco_products_14294_in_wall_smart_dimmer_level_2
+        - light.jasco_products_14294_in_wall_smart_dimmer_level_3
+        - light.gateway_light_7c49eb1a5f3b
+        - lock.schlage_allegion_be469_touchscreen_deadbolt_locked
         - script.turn_off_bedroom_light
         - script.turn_on_bedroom_light_in_morning
         - script.unlock_garage_second_door
@@ -154,3 +151,33 @@ script: !include scripts.yaml
 # IFTTT
 ifttt:
   key: !secret ifttt_key
+
+# Double tap light
+automation:
+  - id: notify_on_double_tap_on_of_bedroom_light
+    alias: Bedroom lights double-tapped on
+    trigger:
+      - platform: event
+        event_type: zwave.node_event
+        event_data:
+          entity_id: zwave.jasco_products_14294_in_wall_smart_dimmer_level_3
+    action:
+      - service_template: >
+          {% if trigger.event.data.basic_level == 255 %}
+            light.turn_on
+          {% elif trigger.event.data.basic_level == 0 %}
+            light.turn_off
+          {% endif %}
+        entity_id: light.jasco_products_14294_in_wall_smart_dimmer_level_3
+
+  - id: auto_lock_front_door
+    alias: Auto lock front door
+    trigger:
+    - platform: state
+      entity_id: lock.schlage_allegion_be469_touchscreen_deadbolt_locked
+      to: 'unlocked'
+      for:
+        minutes: 30
+    action:
+    - service: lock.lock
+      entity_id: lock.schlage_allegion_be469_touchscreen_deadbolt_locked

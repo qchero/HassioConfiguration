@@ -2,7 +2,7 @@ sensor:
   # REST sensor for Google Map directions
   - platform: rest
     name: rest_work_to_home
-    scan_interval: 1200
+    scan_interval: 86400
     json_attributes:
       - routes
     resource: !secret google_direction_work_to_home_url
@@ -10,7 +10,7 @@ sensor:
     value_template: 'static value for avoiding >255 chars'
   - platform: rest
     name: rest_home_to_work
-    scan_interval: 1200
+    scan_interval: 86400
     json_attributes:
       - routes
     resource: !secret google_direction_home_to_work_url
@@ -20,7 +20,7 @@ sensor:
   # POI 1
   - platform: rest
     name: rest_work_to_poi1
-    scan_interval: 30
+    scan_interval: 86400
     json_attributes:
       - routes
     resource: !secret google_direction_work_to_poi1_url
@@ -28,7 +28,7 @@ sensor:
     value_template: 'static value for avoiding >255 chars'
   - platform: rest
     name: rest_poi1_to_work
-    scan_interval: 30
+    scan_interval: 86400
     json_attributes:
       - routes
     resource: !secret google_direction_poi1_to_work_url
@@ -38,7 +38,7 @@ sensor:
   # POI 2
   - platform: rest
     name: rest_work_to_poi2
-    scan_interval: 30
+    scan_interval: 86400
     json_attributes:
       - routes
     resource: !secret google_direction_work_to_poi2_url
@@ -46,16 +46,44 @@ sensor:
     value_template: 'static value for avoiding >255 chars'
   - platform: rest
     name: rest_poi2_to_work
-    scan_interval: 30
+    scan_interval: 86400
     json_attributes:
       - routes
     resource: !secret google_direction_poi2_to_work_url
     method: GET
     value_template: 'static value for avoiding >255 chars'
 
+  # POI 3
+  - platform: rest
+    name: rest_work_to_poi3
+    scan_interval: 86400
+    json_attributes:
+      - routes
+    resource: !secret google_direction_work_to_poi3_url
+    method: GET
+    value_template: 'static value for avoiding >255 chars'
+  - platform: rest
+    name: rest_poi3_to_work
+    scan_interval: 86400
+    json_attributes:
+      - routes
+    resource: !secret google_direction_poi3_to_work_url
+    method: GET
+    value_template: 'static value for avoiding >255 chars'
+
   # Template
   - platform: template
     sensors:
+      # which direction to use in Google Map
+      work_or_home_direction:
+        value_template: >
+          {% if (states.sensor.time.state >= "12:00" and states.sensor.time.state <= "20:00") %}
+            home
+          {% else %}
+            work
+          {% endif %}
+
+      # Home
       duration_work_to_home:
         friendly_name: "Duration Home"
         unit_of_measurement: minutes
@@ -90,45 +118,65 @@ sensor:
         unit_of_measurement: minutes
         value_template: >
           {% if (states('sensor.work_or_home_direction') == "home") %}
-          {{ (states.sensor.rest_work_to_home.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(0) }}
+          {{ (states.sensor.rest_work_to_home.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(1) }}
           {% else %}
-          {{ (states.sensor.rest_home_to_work.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(0) }}
+          {{ (states.sensor.rest_home_to_work.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(1) }}
           {% endif %}
       distance_commute_home:
         unit_of_measurement: mi
         value_template: >
           {% if (states('sensor.work_or_home_direction') == "home") %}
-          {{ (states.sensor.rest_work_to_home.attributes.routes[0].legs[0].distance.value | float / 60) | round(0) }}
+          {{ (states.sensor.rest_work_to_home.attributes.routes[0].legs[0].distance.value * 0.000621371) | round(1) }}
           {% else %}
-          {{ (states.sensor.rest_home_to_work.attributes.routes[0].legs[0].distance.value | float / 60) | round(0) }}
+          {{ (states.sensor.rest_home_to_work.attributes.routes[0].legs[0].distance.value * 0.000621371) | round(1) }}
           {% endif %}
       duration_commute_poi1:
         unit_of_measurement: minutes
         value_template: >
           {% if (states('sensor.work_or_home_direction') == "home") %}
-          {{ (states.sensor.rest_work_to_poi1.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(0) }}
+          {{ (states.sensor.rest_work_to_poi1.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(1) }}
           {% else %}
-          {{ (states.sensor.rest_poi1_to_work.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(0) }}
+          {{ (states.sensor.rest_poi1_to_work.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(1) }}
           {% endif %}
       distance_commute_poi1:
         unit_of_measurement: mi
         value_template: >
           {% if (states('sensor.work_or_home_direction') == "home") %}
-          {{ (states.sensor.rest_work_to_poi1.attributes.routes[0].legs[0].distance.value | float / 60) | round(0) }}
+          {{ (states.sensor.rest_work_to_poi1.attributes.routes[0].legs[0].distance.value * 0.000621371) | round(1) }}
           {% else %}
-          {{ (states.sensor.rest_poi1_to_work.attributes.routes[0].legs[0].distance.value | float / 60) | round(0) }}
+          {{ (states.sensor.rest_poi1_to_work.attributes.routes[0].legs[0].distance.value * 0.000621371) | round(1) }}
           {% endif %}
-
-  # Template sensors
-  - platform: template
-    sensors:
-      # which direction to use in Google Map
-      work_or_home_direction:
+      duration_commute_poi2:
+        unit_of_measurement: minutes
         value_template: >
-          {% if (states.sensor.time.state >= "12:00" and states.sensor.time.state <= "20:00") %}
-            home
+          {% if (states('sensor.work_or_home_direction') == "home") %}
+          {{ (states.sensor.rest_work_to_poi2.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(1) }}
           {% else %}
-            work
+          {{ (states.sensor.rest_poi2_to_work.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(1) }}
+          {% endif %}
+      distance_commute_poi2:
+        unit_of_measurement: mi
+        value_template: >
+          {% if (states('sensor.work_or_home_direction') == "home") %}
+          {{ (states.sensor.rest_work_to_poi2.attributes.routes[0].legs[0].distance.value * 0.000621371) | round(1) }}
+          {% else %}
+          {{ (states.sensor.rest_poi2_to_work.attributes.routes[0].legs[0].distance.value * 0.000621371) | round(1) }}
+          {% endif %}
+      duration_commute_poi3:
+        unit_of_measurement: minutes
+        value_template: >
+          {% if (states('sensor.work_or_home_direction') == "home") %}
+          {{ (states.sensor.rest_work_to_poi3.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(1) }}
+          {% else %}
+          {{ (states.sensor.rest_poi3_to_work.attributes.routes[0].legs[0].duration_in_traffic.value | float / 60) | round(1) }}
+          {% endif %}
+      distance_commute_poi3:
+        unit_of_measurement: mi
+        value_template: >
+          {% if (states('sensor.work_or_home_direction') == "home") %}
+          {{ (states.sensor.rest_work_to_poi3.attributes.routes[0].legs[0].distance.value * 0.000621371) | round(1) }}
+          {% else %}
+          {{ (states.sensor.rest_poi3_to_work.attributes.routes[0].legs[0].distance.value * 0.000621371) | round(1) }}
           {% endif %}
 
 counter:
@@ -137,15 +185,58 @@ counter:
     step: 1
 
 automation:
-  - alias: Periodic update - Direction to Work
+  - alias: Periodic update - Non Commute Hours
     initial_state: true
     trigger:
       platform: time_pattern
-      minutes: '/2'
+      minutes: '/20'
+    condition:
+      - condition: and
+        conditions:
+          - condition: time
+            weekday:
+              - mon
+              - tue
+              - wed
+              - thu
+              - fri
+          - condition: or
+            conditions:
+              - condition: time
+                after: '06:00:00'
+                before: '08:30:00'
+              - condition: time
+                after: '10:30:00'
+                before: '16:00:00'
+              - condition: time
+                after: '19:00:00'
+                before: '21:00:00'
+    action:
+      - service: homeassistant.update_entity
+        entity_id: sensor.rest_home_to_work
+      - service: homeassistant.update_entity
+        entity_id: sensor.rest_poi1_to_work
+      - service: homeassistant.update_entity
+        entity_id: sensor.rest_poi2_to_work
+      - service: homeassistant.update_entity
+        entity_id: sensor.rest_poi3_to_work
+      - service: homeassistant.update_entity
+        entity_id: sensor.rest_work_to_home
+      - service: homeassistant.update_entity
+        entity_id: sensor.rest_work_to_poi1
+      - service: homeassistant.update_entity
+        entity_id: sensor.rest_work_to_poi2
+      - service: homeassistant.update_entity
+        entity_id: sensor.rest_work_to_poi3
+  - alias: Periodic update - Commute Hours - Direction to Work
+    initial_state: true
+    trigger:
+      platform: time_pattern
+      minutes: '/3'
     condition:
       condition: time
       after: '08:30:00'
-      before: '11:00:00'
+      before: '10:30:00'
       weekday:
         - mon
         - tue
@@ -159,14 +250,16 @@ automation:
         entity_id: sensor.rest_poi1_to_work
       - service: homeassistant.update_entity
         entity_id: sensor.rest_poi2_to_work
+      - service: homeassistant.update_entity
+        entity_id: sensor.rest_poi3_to_work
   - alias: Periodic update - Direction Home
     initial_state: true
     trigger:
       platform: time_pattern
-      minutes: '/2'
+      minutes: '/3'
     condition:
       condition: time
-      after: '16:30:00'
+      after: '16:00:00'
       before: '19:00:00'
       weekday:
         - mon
@@ -181,6 +274,8 @@ automation:
         entity_id: sensor.rest_work_to_poi1
       - service: homeassistant.update_entity
         entity_id: sensor.rest_work_to_poi2
+      - service: homeassistant.update_entity
+        entity_id: sensor.rest_work_to_poi3
   - alias: Notification - Reset counter
     initial_state: true
     trigger:

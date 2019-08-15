@@ -150,10 +150,6 @@ automation:
                 (input_minute_4 > 0 and
                 current_time >= start_time_4 and
                 current_time <= end_time_4)
-              ) or
-              (
-                (states('sensor.true_indoor_temperature') | float) > 75 and
-                (states('sensor.true_indoor_temperature') | float) >= (states('sensor.true_outdoor_temperature') | float) + 15
               )
             )
           )

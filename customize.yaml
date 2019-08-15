@@ -19,6 +19,12 @@ sensor.hallway_thermostat_temperature:
 sensor.hallway_thermostat_humidity:
   friendly_name: Hallway
 
+# Ring:
+sensor.ring_garage_last_motion:
+  friendly_name: Ring Garage Last Motion
+
+sensor.ring_garage_last_activity:
+  friendly_name: Ring Garage Last Activity
 
 # Xiaomi devices:
 
@@ -133,12 +139,12 @@ binary_sensor.motion_sensor_158d0002427091:
   friendly_name: Motion Sensor
 
 light.gateway_light_7c49eb1a5f3b:
-  friendly_name: Xiaomi Gateway Lights
+  friendly_name: Xiaomi Gateway Light
 
 
 # Lock
 
-lock.schlage_be469_touchscreen_deadbolt_locked:
+lock.schlage_allegion_be469_touchscreen_deadbolt_locked:
   friendly_name: Front Door
 
 # switch.lock_user_code:
@@ -146,9 +152,14 @@ lock.schlage_be469_touchscreen_deadbolt_locked:
 
 # Light
 
-light.ge_14294_inwall_smart_dimmer_level:
+light.jasco_products_14294_in_wall_smart_dimmer_level_3:
   friendly_name: Bedroom Light
 
+light.jasco_products_14294_in_wall_smart_dimmer_level_2:
+  friendly_name: Living Light
+
+light.jasco_products_14294_in_wall_smart_dimmer_level:
+  friendly_name: Dining Light
 
 # Garage Door
 cover.garage:

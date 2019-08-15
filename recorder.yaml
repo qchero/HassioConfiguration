@@ -5,6 +5,7 @@ include:
     - camera
     - climate
     - cover
+    - input_number
     - light
     - lock
     - sensor
@@ -20,3 +21,22 @@ exclude:
     - binary_sensor.ring_garage_motion
     - sensor.ring_front_door_last_activity
     - sensor.ring_garage_last_activity
+    - sensor.schlage_be469_touchscreen_deadbolt_system
+    - sensor.schlage_be469_touchscreen_deadbolt_sourcenodeid
+    - sensor.schlage_be469_touchscreen_deadbolt_alarm_level
+    - sensor.schlage_be469_touchscreen_deadbolt_alarm_type
+    - sensor.schlage_be469_touchscreen_deadbolt_access_control
+    - sensor.rest_work_to_home
+    - sensor.rest_home_to_work
+    - sensor.rest_work_to_poi1
+    - sensor.rest_poi1_to_work
+    - sensor.rest_work_to_poi2
+    - sensor.rest_poi2_to_work
+    - sensor.rest_work_to_poi3
+    - sensor.rest_poi3_to_work
+    # Thermostat
+    - binary_sensor.hallway_thermostat_is_locked
+    - binary_sensor.hallway_thermostat_is_using_emergency_heat
+    - sensor.custom_card_tracker
+    - sensor.custom_component_tracker
+    
