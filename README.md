@@ -33,7 +33,7 @@ Configuration for [Home Assistant](https://home-assistant.io/) running on a [Ras
 
     ![Fan](screenshots/fan.png)
 
-4. Traffic tab contains the real time travel time between home, work and other places of interest, using Google Map API. The API calls are scheduled in a smart way that doesn't exceed the $200 monthly free credit.
+4. Traffic tab contains the real time travel time between home and work using Google Map API. It also tracks regional traffic by comparing travel time with other routes. The API calls are scheduled to be more frequent during commute hours so it uses the $200 monthly free credit wisely.
 
     ![Traffic](screenshots/traffic.png)
 
