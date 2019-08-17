@@ -9,7 +9,7 @@ Configuration for [Home Assistant](https://home-assistant.io/) running on a [Ras
 * Garage Door: MyQ
 * Thermostat: Nest
 * Doorbell: Ring
-* Temperature sensor: Xiaomi
+* Temperature sensor: Xiaomi Aqara
 * Relay: Sonoff
 * Voice control: Alexa
 
@@ -51,6 +51,6 @@ For example, a custom command can turn off all lights and lock all doors and let
 
 ## Automation
 
-* Commute notification: In a workday afternoon, when the travel time is less than X min, send up to 3 notifications to IFTTT app on the phone, in 5 min intervals.
+* Commute notification: In a workday afternoon, when the travel time is less than X min, send up to 3 notifications to IFTTT app on the phone, in 5 min intervals - [link](https://github.com/qchero/HassioConfiguration/blob/699532270421fc8014fe2374f30bb7cf3a6f474d/package_navigation.yaml#L291)
 
 **Note: Private information is stored in secrets.yaml (not uploaded)**
