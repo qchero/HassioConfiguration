@@ -60,10 +60,58 @@ weather:
     api_key: !secret weather_api_key
     mode: hourly
 
+sensor darksky:
+  - platform: darksky
+    api_key: !secret weather_api_key 
+    scan_interval: '00:10'
+    monitored_conditions:
+      - summary
+      - icon
+      - temperature
+      - temperature_high
+      - temperature_low
+      - humidity
+      - precip_intensity
+      - precip_probability
+      - pressure
+      - wind_speed
+      - uv_index
+      - moon_phase
+      - sunrise_time
+      - sunset_time
+      - alerts
+
 # Nest Thermostat
 # nest:
 #   client_id: !secret nest_client_id
 #   client_secret: !secret nest_client_secret
+
+# Nest Thermostat - https://github.com/USA-RedDragon/badnest
+badnest:
+  issue_token: !secret badnest_issue_token
+  cookie: !secret badnest_cookie
+  region: us
+
+climate:
+  - platform: badnest
+    scan_interval: 10
+
+sensor badnest:
+  - platform: badnest
+  - platform: template
+    sensors:
+      hallway_thermostat_humidity:
+        unit_of_measurement: '%'
+        value_template: "{{ state_attr('climate.hallway_thermostat', 'current_humidity') | round(1) }}"
+        device_class: "humidity"
+      hallway_thermostat_temperature:
+        unit_of_measurement: 'F'
+        value_template: "{{ state_attr('climate.hallway_thermostat', 'current_temperature') | round(1) }}"
+        device_class: "temperature"
+      hallway_thermostat_hvac_state:
+        value_template: "{{ state_attr('climate.hallway_hvac_action', 'hvac_action') }}"
+      hallway_thermostat_fan_mode:
+        value_template: "{{ state_attr('climate.hallway_fan_mode', 'hvac_action') }}"
 
 # MyQ garage door
 cover:
@@ -96,11 +144,10 @@ zwave:
   usb_path: /dev/ttyUSB0
   network_key: !secret zwave_network_key
 
-# Sonoff - https://github.com/peterbuga/HASS-sonoff-ewelink
+# Sonoff
 sonoff:
   username: !secret sonoff_username
   password: !secret sonoff_password
-  api_region: 'us'
 
 # Alexa Smart Home Integration
 api:

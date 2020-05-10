@@ -1,14 +1,7 @@
-# climate.hallway:
-#   friendly_name: Nest Thermostat
-#   unit_of_measurement: 'Fahrenheit'
-
-
-
-# sensor.hallway_thermostat_humidity:
-#   friendly_name: Nest
-#   icon: mdi:water-percent
-
 # Nest:
+
+climate.hallway_thermostat:
+  friendly_name: Nest
 
 binary_sensor.hallway_thermostat_fan:
   friendly_name: Nest Fan
@@ -20,11 +13,32 @@ sensor.hallway_thermostat_humidity:
   friendly_name: Hallway
 
 # Ring:
-sensor.ring_garage_last_motion:
-  friendly_name: Ring Garage Last Motion
+sensor.garage_last_motion:
+  friendly_name: Last Motion
 
-sensor.ring_garage_last_activity:
-  friendly_name: Ring Garage Last Activity
+sensor.garage_last_activity:
+  friendly_name: Last Activity
+
+binary_sensor.garage_motion:
+  friendly_name: Motion
+
+light.garage_light:
+  friendly_name: Light
+
+switch.garage_siren:
+  friendly_name: Siren
+
+sensor.front_door_last_ding:
+  friendly_name: Last Ding
+
+sensor.front_door_last_motion:
+  friendly_name: Last Motion
+
+binary_sensor.front_door_ding:
+  friendly_name: Ding
+
+binary_sensor.front_door_motion:
+  friendly_name: Motion
 
 # Xiaomi devices:
 
@@ -168,3 +182,13 @@ cover.garage:
 switch.sonoff_10004f6d35:
   friendly_name: Fresh Air Fan
   icon: mdi:fan
+
+# Dark Sky
+sensor.dark_sky_temperature:
+  friendly_name: Dark Sky
+
+sensor.dark_sky_humidity:
+  friendly_name: Dark Sky
+
+sensor.dark_sky_pressure:
+  friendly_name: Dark Sky
