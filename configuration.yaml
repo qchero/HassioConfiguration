@@ -33,9 +33,6 @@ config:
 # System Health
 system_health:
 
-# Custom updater for checking updates for custom components and cards
-custom_updater:
-
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 http:
   base_url: !secret http_base_url
@@ -64,9 +61,9 @@ weather:
     mode: hourly
 
 # Nest Thermostat
-nest:
-  client_id: !secret nest_client_id
-  client_secret: !secret nest_client_secret
+# nest:
+#   client_id: !secret nest_client_id
+#   client_secret: !secret nest_client_secret
 
 # MyQ garage door
 cover:
@@ -81,26 +78,11 @@ xiaomi_aqara:
   gateways:
     - key: !secret xiaomi_gateways_key
 
-# Ring Doorbell/Camera
-ring:
-  username: !secret ring_username
-  password: !secret ring_password
-
 # August door lock
 august:
    login_method: phone
    username: !secret august_phonenumber
    password: !secret august_password
-
-# Ring
-camera:
-  - platform: ring
-
-binary_sensor:
-  - platform: ring
-
-sensor:
-  - platform: ring
 
 # Date time
 sensor datetime:
@@ -114,19 +96,11 @@ zwave:
   usb_path: /dev/ttyUSB0
   network_key: !secret zwave_network_key
 
-# Sonoff
+# Sonoff - https://github.com/peterbuga/HASS-sonoff-ewelink
 sonoff:
   username: !secret sonoff_username
   password: !secret sonoff_password
   api_region: 'us'
-
-# TV & box
-media_player:
-  - platform: samsungtv
-    host: !secret samsungtv_host
-    port: 8001
-    mac: !secret samsungtv_mac
-# - platform: xiaomi_tv
 
 # Alexa Smart Home Integration
 api:
@@ -153,31 +127,4 @@ ifttt:
   key: !secret ifttt_key
 
 # Double tap light
-automation:
-  - id: notify_on_double_tap_on_of_bedroom_light
-    alias: Bedroom lights double-tapped on
-    trigger:
-      - platform: event
-        event_type: zwave.node_event
-        event_data:
-          entity_id: zwave.jasco_products_14294_in_wall_smart_dimmer_level_3
-    action:
-      - service_template: >
-          {% if trigger.event.data.basic_level == 255 %}
-            light.turn_on
-          {% elif trigger.event.data.basic_level == 0 %}
-            light.turn_off
-          {% endif %}
-        entity_id: light.jasco_products_14294_in_wall_smart_dimmer_level_3
-
-  - id: auto_lock_front_door
-    alias: Auto lock front door
-    trigger:
-    - platform: state
-      entity_id: lock.schlage_allegion_be469_touchscreen_deadbolt_locked
-      to: 'unlocked'
-      for:
-        minutes: 30
-    action:
-    - service: lock.lock
-      entity_id: lock.schlage_allegion_be469_touchscreen_deadbolt_locked
+automation: !include automation.yaml

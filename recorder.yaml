@@ -1,4 +1,4 @@
-db_url: mysql://hass:qcheromaria@core-mariadb/homeassistant?charset=utf8
+db_url: !secret recorder_db_url
 include:
   domains:
     - binary_sensor

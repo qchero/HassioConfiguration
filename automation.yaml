@@ -1,0 +1,27 @@
+- id: notify_on_double_tap_on_of_bedroom_light
+  alias: Bedroom lights double-tapped on
+  trigger:
+    - platform: event
+      event_type: zwave.node_event
+      event_data:
+        entity_id: zwave.jasco_products_14294_in_wall_smart_dimmer_level_3
+  action:
+    - service_template: >
+        {% if trigger.event.data.basic_level == 255 %}
+          light.turn_on
+        {% elif trigger.event.data.basic_level == 0 %}
+          light.turn_off
+        {% endif %}
+      entity_id: light.jasco_products_14294_in_wall_smart_dimmer_level_3
+
+- id: auto_lock_front_door
+  alias: Auto lock front door
+  trigger:
+  - platform: state
+    entity_id: lock.schlage_allegion_be469_touchscreen_deadbolt_locked
+    to: 'unlocked'
+    for:
+      minutes: 1 # ...
+  action:
+  - service: lock.lock
+    entity_id: lock.schlage_allegion_be469_touchscreen_deadbolt_locked
