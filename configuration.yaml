@@ -62,8 +62,8 @@ weather:
 
 sensor darksky:
   - platform: darksky
-    api_key: !secret weather_api_key 
-    scan_interval: '00:10'
+    api_key: !secret weather_api_key
+    scan_interval: "00:10"
     monitored_conditions:
       - summary
       - icon
@@ -101,11 +101,11 @@ sensor badnest:
   - platform: template
     sensors:
       hallway_thermostat_humidity:
-        unit_of_measurement: '%'
+        unit_of_measurement: "%"
         value_template: "{{ state_attr('climate.hallway_thermostat', 'current_humidity') | round(1) }}"
         device_class: "humidity"
       hallway_thermostat_temperature:
-        unit_of_measurement: 'F'
+        unit_of_measurement: "°F"
         value_template: "{{ state_attr('climate.hallway_thermostat', 'current_temperature') | round(1) }}"
         device_class: "temperature"
       hallway_thermostat_hvac_state:
@@ -128,16 +128,16 @@ xiaomi_aqara:
 
 # August door lock
 august:
-   login_method: phone
-   username: !secret august_phonenumber
-   password: !secret august_password
+  login_method: phone
+  username: !secret august_phonenumber
+  password: !secret august_password
 
 # Date time
 sensor datetime:
   - platform: time_date
     display_options:
-      - 'time'
-      - 'date_time'
+      - "time"
+      - "date_time"
 
 # Z-wave
 zwave:

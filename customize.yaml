@@ -105,7 +105,6 @@ sensor.pressure_158d000208d60c:
 sensor.temperature_158d000208d60c:
   friendly_name: Master Bath
 
-
 # Xiaomi temperature sensor #6
 
 sensor.humidity_158d0002b56d39:
@@ -139,7 +138,6 @@ sensor.pressure_158d000232166e:
 sensor.temperature_158d000232166e:
   friendly_name: Garage
 
-
 # Experiment
 
 sensor.humidity_158d000208d575:
@@ -148,13 +146,11 @@ sensor.humidity_158d000208d575:
 sensor.temperature_158d000208d575:
   friendly_name: XXX
 
-
 binary_sensor.motion_sensor_158d0002427091:
   friendly_name: Motion Sensor
 
 light.gateway_light_7c49eb1a5f3b:
   friendly_name: Xiaomi Gateway Light
-
 
 # Lock
 
@@ -192,3 +188,4 @@ sensor.dark_sky_humidity:
 
 sensor.dark_sky_pressure:
   friendly_name: Dark Sky
+  unit_of_measurement: hPa
