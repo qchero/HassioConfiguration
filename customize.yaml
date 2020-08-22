@@ -157,6 +157,9 @@ light.gateway_light_7c49eb1a5f3b:
 lock.schlage_allegion_be469_touchscreen_deadbolt_locked:
   friendly_name: Front Door
 
+lock.yunding_ford_61cfb4fe_door_lock:
+  friendly_name: Second Door
+
 # switch.lock_user_code:
 #   friendly_name: Enable User Code
 

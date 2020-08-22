@@ -1,3 +1,5 @@
+# Double tap light switch
+
 - id: notify_on_double_tap_on_of_bedroom_light
   alias: Bedroom lights double-tapped on
   trigger:
@@ -14,6 +16,9 @@
         {% endif %}
       entity_id: light.jasco_products_14294_in_wall_smart_dimmer_level_3
 
+
+# Auto lock
+
 - id: auto_lock_front_door
   alias: Auto lock front door
   trigger:
@@ -21,12 +26,26 @@
       entity_id: lock.schlage_allegion_be469_touchscreen_deadbolt_locked
       to: "unlocked"
       for:
-        minutes: 1 # ...
+        minutes: 30
   action:
     - service: lock.lock
       entity_id: lock.schlage_allegion_be469_touchscreen_deadbolt_locked
 
+- id: auto_lock_second_door
+  alias: Auto lock second door
+  trigger:
+    - platform: state
+      entity_id: lock.yunding_ford_61cfb4fe_door_lock
+      to: "unlocked"
+      for:
+        minutes: 30
+  action:
+    - service: lock.lock
+      entity_id: lock.yunding_ford_61cfb4fe_door_lock
+
+
 # HACS
+
 - alias: Create a notification when there is updates pending in HACS
   trigger:
     platform: state
@@ -44,3 +63,38 @@
         {% for repo in state_attr(trigger.entity_id, 'repositories') %}
           **{{ repo.display_name }}** _{{ repo["installed version"] }}_ -> _{{ repo["available version"] }}_
         {% endfor %}
+
+
+# IFTTT - Misfit
+
+# - alias: Misfit single press
+#   trigger:
+#   - event_data:
+#       action: single_pressed
+#     event_type: ifttt_webhook_received
+#     platform: event
+#   action:
+#   - service: lock.unlock
+#     entity_id: lock.yunding_ford_61cfb4fe_door_lock
+
+# - alias: Misfit double press
+#   trigger:
+#   - event_data:
+#       action: double_pressed
+#     event_type: ifttt_webhook_received
+#     platform: event
+#   action:
+#   - service: lock.unlock
+#     entity_id: lock.schlage_allegion_be469_touchscreen_deadbolt_locked
+
+# - alias: Misfit triple press
+#   trigger:
+#   - event_data:
+#       action: triple_pressed
+#     event_type: ifttt_webhook_received
+#     platform: event
+#   action:
+#   - service: lock.lock
+#     entity_id: lock.yunding_ford_61cfb4fe_door_lock
+#   - service: lock.lock
+#     entity_id: lock.schlage_allegion_be469_touchscreen_deadbolt_locked

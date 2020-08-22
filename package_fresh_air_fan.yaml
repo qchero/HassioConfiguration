@@ -49,24 +49,53 @@ input_boolean:
 sensor:
   - platform: template
     sensors:
-      true_outdoor_temperature:
-        unit_of_measurement: '°F'
+      avg_outdoor_humidity:
+        unit_of_measurement: "%"
+        device_class: "humidity"
         value_template: >
-          {% set driveway_temp = states('sensor.temperature_158d000272ff7f') | float %}
-          {% set patio_temp = states('sensor.temperature_158d00023204b3') | float %}
-          {% macro min(X, Y) -%} {{ X if X|float < Y|float else Y }} {%- endmacro %}
-          {% if (driveway_temp == 0) %}
-          {{ patio_temp | round(1) }}
-          {% else %}
-          {{ [driveway_temp + 3, patio_temp + 3, (driveway_temp + patio_temp) / 2] | min | round(1) }}
-          {% endif %}
-      true_indoor_temperature:
-        unit_of_measurement: '°F'
+          {% set driveway_humidity = states('sensor.humidity_158d000272ff7f') | float %}
+          {% set patio_humidity = states('sensor.humidity_158d00023204b3') | float %}
+          {{ ((driveway_humidity + patio_humidity) / 2) | round(1) }}
+
+binary_sensor:
+  - platform: template
+    sensors:
+      fan_time_in_schedule:
         value_template: >
-          {% set living_temp = states('sensor.temperature_158d0002b56d39') | float %}
-          {% set master_bed_temp = states('sensor.temperature_158d00022fddf2') | float %}
-          {% set study_temp = states('sensor.temperature_158d000272ce68') | float %}
-          {{ (living_temp + master_bed_temp) / 2 | round(1) }}
+          {% set current_time = states('sensor.time') %}
+          {% set start_time_1 = states.input_datetime.fresh_air_time_1.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
+          {% set input_minute_1 = states.input_number.fresh_air_minutes_1.state | int %}
+          {% set end_time_1 = (states.input_datetime.fresh_air_time_1.attributes.timestamp + input_minute_1 * 60) | int | timestamp_custom('%H:%M', False) %}
+          {% set start_time_2 = states.input_datetime.fresh_air_time_2.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
+          {% set input_minute_2 = states.input_number.fresh_air_minutes_2.state | int %}
+          {% set end_time_2 = (states.input_datetime.fresh_air_time_2.attributes.timestamp + input_minute_2 * 60) | int | timestamp_custom('%H:%M', False) %}
+          {% set start_time_3 = states.input_datetime.fresh_air_time_3.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
+          {% set input_minute_3 = states.input_number.fresh_air_minutes_3.state | int %}
+          {% set end_time_3 = (states.input_datetime.fresh_air_time_3.attributes.timestamp + input_minute_3 * 60) | int | timestamp_custom('%H:%M', False) %}
+          {% set start_time_4 = states.input_datetime.fresh_air_time_4.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
+          {% set input_minute_4 = states.input_number.fresh_air_minutes_4.state | int %}
+          {% set end_time_4 = (states.input_datetime.fresh_air_time_4.attributes.timestamp + input_minute_4 * 60) | int | timestamp_custom('%H:%M', False) %}
+          {{(
+            input_minute_1 > 0 and
+            current_time >= start_time_1 and
+            current_time <= end_time_1
+          ) or
+          (
+            input_minute_2 > 0 and
+            current_time >= start_time_2 and
+            current_time <= end_time_2
+          ) or
+          (
+            input_minute_3 > 0 and
+            current_time >= start_time_3 and
+            current_time <= end_time_3
+          ) or
+          (
+            input_minute_4 > 0 and
+            current_time >= start_time_4 and
+            current_time <= end_time_4
+          )}}
+
 
 # Automation
 automation:
@@ -75,7 +104,7 @@ automation:
     trigger:
       platform: state
       entity_id: input_boolean.fresh_air_always_on
-      to: 'on'
+      to: "on"
     action:
       service: input_boolean.turn_off
       entity_id: input_boolean.fresh_air_always_off
@@ -85,7 +114,7 @@ automation:
     trigger:
       platform: state
       entity_id: input_boolean.fresh_air_always_off
-      to: 'on'
+      to: "on"
     action:
       service: input_boolean.turn_off
       entity_id: input_boolean.fresh_air_always_on
@@ -95,12 +124,12 @@ automation:
     trigger:
       - platform: state
         entity_id: input_boolean.fresh_air_always_on
-        to: 'on'
-        for: '00:30:00'
+        to: "on"
+        for: "02:00:00"
       - platform: state
         entity_id: input_boolean.fresh_air_always_off
-        to: 'on'
-        for: '00:30:00'
+        to: "on"
+        for: "02:00:00"
     action:
       - service: input_boolean.turn_off
         entity_id: input_boolean.fresh_air_always_on
@@ -119,37 +148,15 @@ automation:
     action:
       # 4 time & duration settings for fresh air fan
       service_template: >
-        {% set current_time = states('sensor.time') %}
-        {% set start_time_1 = states.input_datetime.fresh_air_time_1.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
-        {% set input_minute_1 = states.input_number.fresh_air_minutes_1.state | int %}
-        {% set end_time_1 = (states.input_datetime.fresh_air_time_1.attributes.timestamp + input_minute_1 * 60) | int | timestamp_custom('%H:%M', False) %}
-        {% set start_time_2 = states.input_datetime.fresh_air_time_2.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
-        {% set input_minute_2 = states.input_number.fresh_air_minutes_2.state | int %}
-        {% set end_time_2 = (states.input_datetime.fresh_air_time_2.attributes.timestamp + input_minute_2 * 60) | int | timestamp_custom('%H:%M', False) %}
-        {% set start_time_3 = states.input_datetime.fresh_air_time_3.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
-        {% set input_minute_3 = states.input_number.fresh_air_minutes_3.state | int %}
-        {% set end_time_3 = (states.input_datetime.fresh_air_time_3.attributes.timestamp + input_minute_3 * 60) | int | timestamp_custom('%H:%M', False) %}
-        {% set start_time_4 = states.input_datetime.fresh_air_time_4.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
-        {% set input_minute_4 = states.input_number.fresh_air_minutes_4.state | int %}
-        {% set end_time_4 = (states.input_datetime.fresh_air_time_4.attributes.timestamp + input_minute_4 * 60) | int | timestamp_custom('%H:%M', False) %}
+        {% set avg_outdoor_humidity = states('sensor.avg_outdoor_humidity') | float %}
         {% if
           (
-            (states.input_boolean.fresh_air_always_off.state != 'on') and
+            states.input_boolean.fresh_air_always_off.state != 'on' and
             (
               states.input_boolean.fresh_air_always_on.state == 'on' or
               (
-                (input_minute_1 > 0 and
-                current_time >= start_time_1 and
-                current_time <= end_time_1) or
-                (input_minute_2 > 0 and
-                current_time >= start_time_2 and
-                current_time <= end_time_2) or
-                (input_minute_3 > 0 and
-                current_time >= start_time_3 and
-                current_time <= end_time_3) or
-                (input_minute_4 > 0 and
-                current_time >= start_time_4 and
-                current_time <= end_time_4)
+                states.binary_sensor.fan_time_in_schedule.state == 'on' and
+                avg_outdoor_humidity < 80
               )
             )
           )

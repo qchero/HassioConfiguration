@@ -14,6 +14,7 @@ homeassistant:
 
 # Enables the frontend
 frontend:
+  themes: !include_dir_merge_named themes
 
 # Hassio tab
 hassio:
@@ -35,10 +36,9 @@ system_health:
 
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 http:
-  base_url: !secret http_base_url
   ssl_certificate: !secret http_ssl_certificate
   ssl_key: !secret http_ssl_key
-  login_attempts_threshold: 5
+  login_attempts_threshold: 10
   ip_ban_enabled: true
 
 # Checks for available updates
@@ -113,25 +113,6 @@ sensor badnest:
       hallway_thermostat_fan_mode:
         value_template: "{{ state_attr('climate.hallway_fan_mode', 'hvac_action') }}"
 
-# MyQ garage door
-cover:
-  - platform: myq
-    username: !secret myq_username
-    password: !secret myq_password
-    type: chamberlain
-
-# Mi jia sensors
-xiaomi_aqara:
-  discovery_retry: 5
-  gateways:
-    - key: !secret xiaomi_gateways_key
-
-# August door lock
-august:
-  login_method: phone
-  username: !secret august_phonenumber
-  password: !secret august_password
-
 # Date time
 sensor datetime:
   - platform: time_date
@@ -161,6 +142,7 @@ alexa:
         - light.jasco_products_14294_in_wall_smart_dimmer_level_3
         - light.gateway_light_7c49eb1a5f3b
         - lock.schlage_allegion_be469_touchscreen_deadbolt_locked
+        - lock.yunding_ford_61cfb4fe_door_lock
         - script.turn_off_bedroom_light
         - script.turn_on_bedroom_light_in_morning
         - script.unlock_garage_second_door
@@ -175,3 +157,15 @@ ifttt:
 
 # Double tap light
 automation: !include automation.yaml
+
+
+# Group
+group:
+  hassiq:
+    name: HassIQ
+    entities:
+      - lock.schlage_allegion_be469_touchscreen_deadbolt_locked
+      - lock.yunding_ford_61cfb4fe_door_lock
+      - light.jasco_products_14294_in_wall_smart_dimmer_level
+      - light.jasco_products_14294_in_wall_smart_dimmer_level_2
+      - light.jasco_products_14294_in_wall_smart_dimmer_level_3

@@ -46,7 +46,7 @@ both_leave_home:
     - service_template:
         lock.lock
       data_template:
-        entity_id: lock.garage_door
+        entity_id: lock.yunding_ford_61cfb4fe_door_lock
 
 # Unlock Garage Door
 unlock_garage_second_door:
@@ -54,4 +54,4 @@ unlock_garage_second_door:
     - service:
         lock.unlock
       data_template:
-        entity_id: lock.garage_door
+        entity_id: lock.yunding_ford_61cfb4fe_door_lock

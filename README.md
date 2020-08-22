@@ -5,7 +5,7 @@ Configuration for [Home Assistant](https://home-assistant.io/) running on a [Ras
 ## Hardware
 
 * Light switch: GE Z-Wave Plus Dimmer
-* Lock: Schlage Connect, August 3rd gen
+* Lock: Schlage Connect, Wyze Lock  ~~August 3rd gen~~ 
 * Garage Door: MyQ
 * Thermostat: Nest
 * Doorbell: Ring
@@ -15,8 +15,9 @@ Configuration for [Home Assistant](https://home-assistant.io/) running on a [Ras
 
 ## Connection
 
-* Connect through Internet: August, MyQ, Nest, Ring, Sonoff, Alexa
+* Connect through Internet: MyQ, Nest, Ring, Sonoff, Alexa
 * Connect through Z-Wave: GE Z-Wave Plus Dimmer, Schlage Connect
+* Connect through Zigbee: Wyze Lock
 * Connect through LAN: Xiaomi
 
 ## UI Components
