@@ -20,6 +20,16 @@ input_number:
     max: 120
     min: 0
     step: 5
+  fresh_air_minutes_5:
+    name: Duration Minute 5
+    max: 120
+    min: 0
+    step: 5
+  fresh_air_minutes_6:
+    name: Duration Minute 6
+    max: 120
+    min: 0
+    step: 5
 
 # Input datetime
 input_datetime:
@@ -34,6 +44,12 @@ input_datetime:
     has_time: true
   fresh_air_time_4:
     name: Start Time 4
+    has_time: true
+  fresh_air_time_5:
+    name: Start Time 5
+    has_time: true
+  fresh_air_time_6:
+    name: Start Time 6
     has_time: true
 
 # Input numbers for overrides
@@ -75,6 +91,12 @@ binary_sensor:
           {% set start_time_4 = states.input_datetime.fresh_air_time_4.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
           {% set input_minute_4 = states.input_number.fresh_air_minutes_4.state | int %}
           {% set end_time_4 = (states.input_datetime.fresh_air_time_4.attributes.timestamp + input_minute_4 * 60) | int | timestamp_custom('%H:%M', False) %}
+          {% set start_time_5 = states.input_datetime.fresh_air_time_5.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
+          {% set input_minute_5 = states.input_number.fresh_air_minutes_5.state | int %}
+          {% set end_time_5 = (states.input_datetime.fresh_air_time_5.attributes.timestamp + input_minute_5 * 60) | int | timestamp_custom('%H:%M', False) %}
+          {% set start_time_6 = states.input_datetime.fresh_air_time_6.attributes.timestamp | int | timestamp_custom('%H:%M', False) %}
+          {% set input_minute_6 = states.input_number.fresh_air_minutes_6.state | int %}
+          {% set end_time_6 = (states.input_datetime.fresh_air_time_6.attributes.timestamp + input_minute_6 * 60) | int | timestamp_custom('%H:%M', False) %}
           {{(
             input_minute_1 > 0 and
             current_time >= start_time_1 and
@@ -94,6 +116,16 @@ binary_sensor:
             input_minute_4 > 0 and
             current_time >= start_time_4 and
             current_time <= end_time_4
+          ) or
+          (
+            input_minute_5 > 0 and
+            current_time >= start_time_5 and
+            current_time <= end_time_5
+          ) or 
+          (
+            input_minute_6 > 0 and
+            current_time >= start_time_6 and
+            current_time <= end_time_6
           )}}
 
 
@@ -155,8 +187,7 @@ automation:
             (
               states.input_boolean.fresh_air_always_on.state == 'on' or
               (
-                states.binary_sensor.fan_time_in_schedule.state == 'on' and
-                avg_outdoor_humidity < 80
+                states.binary_sensor.fan_time_in_schedule.state == 'on'
               )
             )
           )

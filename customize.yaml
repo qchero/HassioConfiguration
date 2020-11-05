@@ -165,6 +165,9 @@ lock.yunding_ford_61cfb4fe_door_lock:
 
 # Light
 
+light.jasco_products_14294_in_wall_smart_dimmer_level_4:
+  friendly_name: Family Light
+
 light.jasco_products_14294_in_wall_smart_dimmer_level_3:
   friendly_name: Bedroom Light
 

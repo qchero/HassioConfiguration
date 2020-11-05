@@ -26,7 +26,7 @@
       entity_id: lock.schlage_allegion_be469_touchscreen_deadbolt_locked
       to: "unlocked"
       for:
-        minutes: 30
+        minutes: 5
   action:
     - service: lock.lock
       entity_id: lock.schlage_allegion_be469_touchscreen_deadbolt_locked
@@ -38,7 +38,7 @@
       entity_id: lock.yunding_ford_61cfb4fe_door_lock
       to: "unlocked"
       for:
-        minutes: 30
+        minutes: 15
   action:
     - service: lock.lock
       entity_id: lock.yunding_ford_61cfb4fe_door_lock

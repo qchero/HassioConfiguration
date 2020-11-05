@@ -140,6 +140,7 @@ alexa:
         - light.jasco_products_14294_in_wall_smart_dimmer_level
         - light.jasco_products_14294_in_wall_smart_dimmer_level_2
         - light.jasco_products_14294_in_wall_smart_dimmer_level_3
+        - light.jasco_products_14294_in_wall_smart_dimmer_level_4
         - light.gateway_light_7c49eb1a5f3b
         - lock.schlage_allegion_be469_touchscreen_deadbolt_locked
         - lock.yunding_ford_61cfb4fe_door_lock
@@ -169,3 +170,5 @@ group:
       - light.jasco_products_14294_in_wall_smart_dimmer_level
       - light.jasco_products_14294_in_wall_smart_dimmer_level_2
       - light.jasco_products_14294_in_wall_smart_dimmer_level_3
+      - light.jasco_products_14294_in_wall_smart_dimmer_level_4
+
